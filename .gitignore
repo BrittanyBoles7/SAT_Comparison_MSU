@@ -1,10 +1,10 @@
 
-/msusel-SATComparison-Pipe/01_ToolVersions/01_input/GrypeVersions.txt
-/msusel-SATComparison-Pipe/01_ToolVersions/01_input/TrivyVersions.txt
-/msusel-SATComparison-Pipe/01_ToolVersions/04_product/Grype/
-/msusel-SATComparison-Pipe/01_ToolVersions/04_product/Trivy/
-/msusel-SATComparison-Pipe/02_DataAcquisition/04_product/Grype/
-/msusel-SATComparison-Pipe/02_DataAcquisition/04_product/Trivy/
-/msusel-SATComparison-Pipe/03_Processing/04_product/Grype/
-/msusel-SATComparison-Pipe/03_Processing/04_product/Trivy/
+/01_ToolVersions/01_input/GrypeVersions.txt
+/01_ToolVersions/01_input/TrivyVersions.txt
+/01_ToolVersions/04_product/Grype/
+/01_ToolVersions/04_product/Trivy/
+/02_DataAcquisition/04_product/Grype/
+/02_DataAcquisition/04_product/Trivy/
+/03_Processing/04_product/Grype/
+/03_Processing/04_product/Trivy/
 
