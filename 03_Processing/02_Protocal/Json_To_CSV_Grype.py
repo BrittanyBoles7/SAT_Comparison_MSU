@@ -19,7 +19,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
             for i in row['json_list']:
 
                 df_image = self.image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
-                # self.cve_other(df_image)  # just looking at related vulns and how they are handled
+                self.cve_other(df_image)  # just looking at related vulns and how they are handled
 
                 name_list = [i['source']['target']['userInput']] * len(df_image)  # list of the image name repeated for master_DataFrame
 
@@ -57,7 +57,6 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
         else:  # this image had no results/ vulns so enter NA
             df_image.loc[0] = ['NA', 'NA', 'NA']
-
 
         return df_image
 
