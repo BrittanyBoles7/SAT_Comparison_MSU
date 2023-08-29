@@ -42,7 +42,7 @@ class Json_To_CSV:
     @staticmethod
     def cve_other(df):  # df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
         for i, vuln in df.iterrows():  # for each vuln in the image
-            if 'CVE' not in vuln['vuln_id']:  # if we don't already have a cve
+            if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln['vuln_id']:  # if we don't already have a cve
 
                 response = requests.get("https://api.osv.dev/v1/vulns/" + vuln[
                     'vuln_id']).text  # gets info on the vuln from the open source vulnerabilities databases
