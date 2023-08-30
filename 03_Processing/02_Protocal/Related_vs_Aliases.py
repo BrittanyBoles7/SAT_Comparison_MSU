@@ -1,14 +1,13 @@
-import os
-import json
+
 import sys
 import pandas as pd
 import requests
 from pathlib import Path
 
 
-def vs_thething():  # df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
+def compare_relation_tables():  # df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
     grype_info = pd.read_csv(
-        "/media/reu2023/extradrive1/msusel-SATComparison/03_Processing/03_incremental/connectedVulnerabilityIDs.csv")
+        str(Path(sys.path[0]).absolute().parent) + "/03_incremental/connectedVulnerabilityIDs.csv")
     for vuln in grype_info.values:
         # print(vuln[0])
         response = requests.get("https://api.osv.dev/v1/vulns/" + vuln[0]).text  # gets info on the vuln from the open source vulnerabilities databases
@@ -35,11 +34,8 @@ def vs_thething():  # df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'sev
                             print("interesting")
                             print("vuln: " + vuln[0])
                             print("Aliases: " + a)
-
-
         else:
             pass
             print(vuln[0] + " has no aliases")
 
-
-vs_thething()
+compare_relation_tables()

@@ -26,7 +26,7 @@ class Json_To_CSV_Trivy(Json_To_CSV):
                 df_image.insert(0, 'image_name', np.array(name_list), True)
                 df_t = pd.concat([df_t, df_image])
 
-                self.cve_other(df_image)  # just an investigation tool, related to aliases/related vulns
+                vuln_relation_investigation(df_image)  # just an investigation tool, related to aliases/related vulns
 
             self.save_data_to_file(row['version'], "Trivy",
                                    df_t)  # for each version save the data frame out to csv file
