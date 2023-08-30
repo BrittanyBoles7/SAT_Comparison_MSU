@@ -1,9 +1,16 @@
+#!/usr/bin/env python3
+
+"""
+Here we run every docker image,
+through every version of Trivy and save the json files,
+which contain info, specifically a list of vulnerabilities.
+"""
+
+from GlobalFunctions.Symbolic_Link import link
 import os
 import subprocess as sp
 import sys
 from pathlib import Path
-
-from GlobalFunctions.Symbolic_Link import link
 
 
 class TrivyImageProcessing:
@@ -15,38 +22,28 @@ class TrivyImageProcessing:
         # list of the different Docker Images (note this comes out as a list of bytes
         self.images = sp.check_output("docker images --format '{{.Repository}}:{{.Tag}}'", shell=True).splitlines()
 
-    # goes through each version of trivy and runs every docker image through it. Saves output as json
     def processing(self):
-        # for each trivy version
-        for t in self.TVs:
+        """goes through each version of trivy and runs every docker image through it. Saves output as json"""
+
+        for t in self.TVs:  # foreach versions of trivy
             trivy_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/" + t
 
-            # for each docker image
-            for i in self.images:
+            for i in self.images:  # for each docker image
 
-                print(i)
                 # image comes out as a byte and we need string form
                 image = i.decode('utf-8')
 
-                # some images don't have the latest version/ any version so skip those
-                # Later: why does this happen
-                if not (image.__contains__('none')):
+                # if the directory doesn't exist yet create it
+                if not os.path.exists(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t):
+                    os.makedirs(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t)
 
-                    # if the directory doesn't exist yet create it
-                    if not os.path.exists(str(Path(
-                            sys.path[0]).absolute().parent.parent) + '/02_DataAcquisition/04_product/Trivy/' + t):
-                        os.makedirs(str(Path(
-                            sys.path[0]).absolute().parent.parent) + '/02_DataAcquisition/04_product/Trivy/' + t)
+                # where we want to save the json that contains vulnerability info from the image run through the trivy version
+                output_path = (str(Path(sys.path[0]).absolute().parent) + "/04_product/Trivy/" + t + "/" + image + ".json")
 
-                    # where we want to save the json that contains vulnerability info from the image run through the trivy version
-                    output_path = (str(Path(
-                        sys.path[0]).absolute().parent) + "/04_product/Trivy/" + t + "/" + image + ".json")
-
+                if not os.path.exists(output_path):  # remove if you want to run all images, only here to save time and not rerun data
                     # command line to run the image through the trivy version
                     cmd = [trivy_version_filepath, "image -f json -o", output_path, image]
                     sp.run(" ".join(cmd), shell=True, check=True)
-                else:
-                    print(image)
 
 
 def main():

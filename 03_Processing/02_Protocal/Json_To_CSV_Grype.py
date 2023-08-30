@@ -35,25 +35,21 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
         if len(i['matches']) > 0:  # some images might not have any matches, meaning there wasn't any vulns
             for v in i['matches']:
-
                 current = v['vulnerability']
-                if len(current['id']) > 0:  # making sure we found things
-                    if current['id'] in df_image.values:  # if we already found this vuln in this image, just update the count
-                        index_vulnId = df_image[df_image['vuln_id'] == current['id']].index  # get index of the vuln in the data frame
-                        current_vuln_count = df_image.loc[index_vulnId]['count'].values[0]  # get the current info for this vulns id from the data frame
-                        df_image.loc[index_vulnId] = [current['id'], current['severity'], current_vuln_count + 1]  # reset the row with an updated count
+                if current['id'] in df_image.values:  # if we already found this vuln in this image, just update the count
+                    index_vulnId = df_image[df_image['vuln_id'] == current['id']].index  # get index of the vuln in the data frame
+                    current_vuln_count = df_image.loc[index_vulnId]['count'].values[0]  # get the current info for this vulns id from the data frame
+                    df_image.loc[index_vulnId] = [current['id'], current['severity'], current_vuln_count + 1]  # reset the row with an updated count
 
-                        # reu students found that some severities varied for the same vuln. This is just a check to see if it happens again
-                        if current['severity'] != df_image.loc[index_vulnId]['severity'].values[0]:
-                            print("wtf")
-                            print(current)  # a check for later if this ever happens got to go back and change this statement
+                    # reu students found that some severities varied for the same vuln. This is just a check to see if it happens again
+                    if current['severity'] != df_image.loc[index_vulnId]['severity'].values[0]:
+                        print("wtf")
+                        print(current)  # a check for later if this ever happens got to go back and change this statement
 
-                    else:
-                        # making a new row of our data frame with vuln id, severity and the total count of times it was found in this image
-                        new_row = [current['id'], current['severity'], int(1)]
-                        df_image.loc[len(df_image.index)] = new_row
-                else:  # just skip this vulnerability in matches, not all the info was present
-                    print("id was empty")
+                else:
+                    # making a new row of our data frame with vuln id, severity and the total count of times it was found in this image
+                    new_row = [current['id'], current['severity'], int(1)]
+                    df_image.loc[len(df_image.index)] = new_row
 
         else:  # this image had no results/ vulns so enter NA
             df_image.loc[0] = ['NA', 'NA', 'NA']

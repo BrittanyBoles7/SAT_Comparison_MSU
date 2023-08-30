@@ -71,11 +71,11 @@ class Json_To_CSV:
                                         print(" ")
 
                 else:
-
-                     print(vuln['vuln_id'] + " has no aliases")
+                    pass
+                     #print(vuln['vuln_id'] + " has no aliases")
             else:
-
-                 print(vuln['vuln_id'])
+                pass
+                 # print(vuln['vuln_id'])
 
     @staticmethod
     def save_data_to_file(v: str, tool: str, df: pd.DataFrame):

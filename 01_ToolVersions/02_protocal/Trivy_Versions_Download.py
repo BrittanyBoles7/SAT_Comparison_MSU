@@ -1,17 +1,25 @@
+#!/usr/bin/env python3
+
+"""
+Here we are given a .txt file with a list of Trivy versions from 01_input,
+ we download versions and save to 04_product
+"""
+
+from GlobalFunctions.Symbolic_Link import link
 import os
-import requests
 import sys
 import subprocess as sp
 from pathlib import Path
-from GlobalFunctions.Symbolic_Link import link
 
 
 # Tips:
 # -some versions of Grype and Trivy aren't available for download if you have a version not present it will throw an error
 #
 
-# Given a version (vX.XX.X or vX.X.X) downloads the associated Trivy version and save it .
+
 def install_trivy(version):
+    """Given a version in string form(vX.XX.X or vX.X.X) downloads the associated Trivy version and save it ."""
+
     # make file path to save out to
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy/"
 
@@ -26,6 +34,8 @@ def install_trivy(version):
 
 
 def main():
+    """We read in the input txt file with desired Trivy versions and run through our install grype version function"""
+
     # versionNames should look like a list = ['vx.x.x','vx.xx.x']
     with open(
             str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/01_input/TrivyVersions.txt",

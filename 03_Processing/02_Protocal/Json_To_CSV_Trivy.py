@@ -16,7 +16,7 @@ class Json_To_CSV_Trivy(Json_To_CSV):
 
         for index, row in df_json.iterrows():  # goes through each version
             # each version will get dataframe with all vuln info combined from every version
-            df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity','count'])
+            df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
 
             for i in row['json_list']:  # for each image go through results
 
@@ -28,16 +28,17 @@ class Json_To_CSV_Trivy(Json_To_CSV):
 
                 self.cve_other(df_image)  # just an investigation tool, related to aliases/related vulns
 
-            self.save_data_to_file(row['version'], "Trivy", df_t)  # for each version save the data frame out to csv file
+            self.save_data_to_file(row['version'], "Trivy",
+                                   df_t)  # for each version save the data frame out to csv file
 
     @staticmethod
     def image_vuln_info(i):
         df_image = pd.DataFrame(columns=['vuln_id', 'severity', 'count'])
 
-        if 'results' in i and len(i['Results']) > 0:
-            for r in i['Results']:  # results in Trivy are split into multiple lists go through all of them
-
-                if 'Vulnerabilities' in r:  # if we found vuln's
+        if 'Results' in i: # if no results then no vulns write NA
+            for r in i['Results']:
+                if "Vulnerabilities" in r: # results get split into two catagories. If ones blank not a big deal
+                    # if 'Vulnerabilities' in r:  # if we found vuln's
                     for v in r['Vulnerabilities']:  # go through each vuln found in each image
 
                         if v['VulnerabilityID'] in df_image.values:  # if we already found this vuln in this image, just update the count
@@ -52,10 +53,9 @@ class Json_To_CSV_Trivy(Json_To_CSV):
                             # making a new row of our data frame with vuln id, severity and the total count of times it was found in this image
                             new_row = [v['VulnerabilityID'], v['Severity'], int(1)]
                             df_image.loc[len(df_image.index)] = new_row
-
                 else:
-                    print("is this where a should na")
-                    # sometimes we get results but not vuln's. Note sure why might be info we want to add later
+                    pass
+
         else:  # this image had no results/ vulns so enter NA
             df_image.loc[0] = ['NA', 'NA', 'NA']
 
