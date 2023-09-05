@@ -1,13 +1,15 @@
+"""
+This is a parent class that just has helpful functions that can be used in the processing of either tools .json file
+Here helps sort the versions and their set of images vulnerability sets. It also holds a function to write the data frames to a csv file.
+"""
+
 import os
 import json
 import sys
 import pandas as pd
-import requests
 from pathlib import Path
 
 
-# this gets a data frame that returns a list of the versions, and a corresponding list(list()) that for each version,
-# each image, we have the json info.
 class Json_To_CSV:
     df_json = pd.DataFrame()
 
@@ -49,45 +51,3 @@ class Json_To_CSV:
             os.makedirs(outpath_directory)
 
         df.to_csv(outpath_directory + v + '.csv')
-
-
-def vuln_relation_investigation(df):
-    """
-    Here we look into the vulns from either grype or trivy and investigate how they handle them/ mainly grype
-    :param df:pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
-    """
-    for i, vuln in df.iterrows():  # for each vuln in the image
-        if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln['vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
-
-            # gets info on the vuln from the open source vulnerabilities databases
-            response = requests.get("https://api.osv.dev/v1/vulns/" + vuln['vuln_id']).text
-            if 'aliases' in response:  # if there is an aliases for this vuln, we want to replace this vuln with its aliases or at least check it out
-                list_things = response.split(",")  # response long string of info about the vuln
-                for s in list_things:
-
-                    if 'aliases' in s:  # we only want to info about related vulns
-                        # just the tedious work of splitting a string
-                        aliases_list = (s.split(":", 1)[1]
-                                        .replace('[', '').replace(']', '')
-                                        .replace('"', '')
-                                        .split(','))
-                        if len(aliases_list) > 1:
-                            print(aliases_list)  # just a check if there ever is multiple aliases for the same vuln
-                        for a in aliases_list:  # occasionally there is more than one aliases for the same vuln, we go through all of them
-                            # if this goes off then the same vuln might be getting reported under different names
-                            if a in df.values:
-                                index_vulnId = df[df['vuln_id'] == a].index
-                                current_vuln = df.loc[index_vulnId]
-
-                                if vuln['count'] != current_vuln['count'].values[0]:  # I expected same number but might not be true.
-                                    print("vuln:    " + str(vuln['vuln_id']) + " count: " + str(vuln['count']))
-                                    print("aliases: " + current_vuln['vuln_id'].values[0] + " count: " + str(
-                                        current_vuln['count'].values[0]))
-                                    print(" ")
-
-            else:
-                pass
-                # print(vuln['vuln_id'] + " has no aliases")
-        else:
-            pass
-            # print(vuln['vuln_id'])
