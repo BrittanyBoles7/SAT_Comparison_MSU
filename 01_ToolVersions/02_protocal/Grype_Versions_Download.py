@@ -49,4 +49,20 @@ def install_grype(version):
     sp.run(" ".join(cmd), shell=True, check=True)
 
 
+def install_grype_control_database(version):
+    """Given a version in string form (vX.XX.X or vX.X.X) downloads the associated Grype version and save it."""
+
+    # make file path to save out to
+    path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype/"
+
+    # command to install grype version of interest
+    cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/anchore/grype/main/install.sh",
+           "|", "sh", "-s", "--", "-b", path, version]
+    sp.run(" ".join(cmd), shell=True, check=True)
+
+    # command to change the name, so we have the version numbers as the tool title
+    cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
+    sp.run(" ".join(cmd), shell=True, check=True)
+
+
 main()

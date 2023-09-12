@@ -46,6 +46,32 @@ class TrivyImageProcessing:
                     sp.run(" ".join(cmd), shell=True, check=True)
 
 
+    def processing_control_database(self):
+        """goes through each version of trivy and runs every docker image through it. Saves output as json"""
+
+        for t in self.TVs:  # foreach versions of trivy
+            trivy_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/" + t
+
+            for i in self.images:  # for each docker image
+
+                # image comes out as a byte and we need string form
+                image = i.decode('utf-8')
+
+                # if the directory doesn't exist yet create it
+                if not os.path.exists(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t):
+                    os.makedirs(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t)
+
+                # where we want to save the json that contains vulnerability info from the image run through the trivy version
+                output_path = (str(Path(sys.path[0]).absolute().parent) + "/04_product/Trivy/" + t + "/" + image + ".json")
+
+                if not os.path.exists(output_path):  # remove if you want to run all images, only here to save time and not rerun data
+                    # command line to run the image through the trivy version
+                    cmd = [trivy_version_filepath, "image --db-repository YourRepo -f json -o", output_path, image]
+                    # trivy image --db-repository YOUR_REPO YOUR_IMAGE
+                    sp.run(" ".join(cmd), shell=True, check=True)
+
+
+
 def main():
     TI = TrivyImageProcessing()
     TI.processing()
