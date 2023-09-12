@@ -15,7 +15,7 @@ def batch_cve_request(i, api_key):
     if response.status_code != 200:
         print(response.status_code)
         exit(1)
-
+#nothinh
     data = response.json()
     for cve_data in data['vulnerabilities']:
         ID = cve_data['cve']["id"]
