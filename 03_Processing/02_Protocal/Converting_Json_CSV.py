@@ -8,7 +8,6 @@ import json
 import sys
 import pandas as pd
 from pathlib import Path
-
 import requests
 
 
@@ -16,10 +15,10 @@ class Json_To_CSV:
     df_json = pd.DataFrame()
 
     def __init__(self, path):
-        self.df_json = self._version_image_json(path)
+        self.df_json = self.version_image_json(path)
 
     @staticmethod
-    def _version_image_json(path: str):
+    def version_image_json(path: str):
         # gets list of versions
         version_list = os.listdir(path)
 
@@ -31,10 +30,13 @@ class Json_To_CSV:
 
             json_per_image_list = list()  # list of all the json texts for one version
             for image_json in image_jsons_list:
-                # open this version, this images json file that holds info about the vuln this versions found in this image
-                with open(os.path.join(path_to_json_files, image_json)) as json_file:
-                    json_per_image_list.append(json.load(json_file))
-
+                try:
+                    # open this version, this images json file that holds info about the vuln this versions found in this image
+                    with open(os.path.join(path_to_json_files, image_json), 'r') as json_file:
+                        a = json.loads(json_file.read())
+                        json_per_image_list.append(a)
+                except:
+                    print(os.path.join(path_to_json_files, image_json))
             version_image_json_list.append(json_per_image_list)
 
         # creating a data frame with the versions and their corresponding list(list()) of each images json.
@@ -50,7 +52,8 @@ class Json_To_CSV:
         :param df:pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
         """
         for i, vuln in df.iterrows():  # for each vuln in the image
-            if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln['vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
+            if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln[
+                'vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
 
                 # gets info on the vuln from the open source vulnerabilities databases
                 response = requests.get("https://api.osv.dev/v1/vulns/" + vuln['vuln_id']).text

@@ -10,16 +10,16 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
     def __init__(self, path):
         super().__init__(path)
-        self._create_data_frame(self.df_json)
+        self.create_data_frame(self.df_json)
 
-    def _create_data_frame(self, df_json):
+    def create_data_frame(self, df_json):
 
         # make sure indexes pair with number of rows
         for index, row in df_json.iterrows():
             df_g = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])  # for each version get a data frame
             for i in row['json_list']:
 
-                df_image = self._image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
+                df_image = self.image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
                 self.vuln_relation_investigation(df_image)  # just looking at related vulns and how they are handled
 
                 name_list = [i['source']['target']['userInput']] * len(df_image)  # list of the image name repeated for master_DataFrame
@@ -31,7 +31,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
             self.save_data_to_file(row['version'], "Grype", df_g)
 
     @staticmethod
-    def _image_vuln_info(i):
+    def image_vuln_info(i):
         df_image = pd.DataFrame(columns=['vuln_id', 'severity', 'count'])
 
         if len(i['matches']) > 0:  # some images might not have any matches, meaning there wasn't any vulns

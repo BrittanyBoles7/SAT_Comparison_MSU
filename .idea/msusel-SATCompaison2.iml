@@ -2,6 +2,13 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/01_ToolVersions/03_incremental/data/nvd/input" />
+      <excludeFolder url="file://$MODULE_DIR$/01_ToolVersions/04_product/Grype" />
+      <excludeFolder url="file://$MODULE_DIR$/01_ToolVersions/04_product/Trivy" />
+      <excludeFolder url="file://$MODULE_DIR$/02_DataAcquisition/04_product/Grype" />
+      <excludeFolder url="file://$MODULE_DIR$/02_DataAcquisition/04_product/Trivy" />
+      <excludeFolder url="file://$MODULE_DIR$/03_Processing/04_product/Grype" />
+      <excludeFolder url="file://$MODULE_DIR$/03_Processing/04_product/Trivy" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="inheritedJdk" />

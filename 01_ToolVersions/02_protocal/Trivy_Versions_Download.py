@@ -39,14 +39,10 @@ def install_trivy_control_database(version):
     # make file path to save out to
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy/"
 
-    # command to install grype version of intrest
-    cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh",
-           "|", "sh", "-s", "--", "-b", path, version]
+    # command to install grype version of interest
+    cmd = ["docker pull aquasec/trivy-db:v1-2023021412"]
     sp.run(" ".join(cmd), shell=True, check=True)
 
-    # command to change the name, so we have the version numbers as the tool title
-    cmd = ["mv", path + "trivy", path + version.replace("v", "T").replace(".", "_")]
-    sp.run(" ".join(cmd), shell=True, check=True)
 
 
 def main():
@@ -60,7 +56,7 @@ def main():
 
     for version in versions:
         install_trivy(version)
-
+ # did it work?
     # builds a link to the next part of the processes input. Just done once
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy"
     shadow_path = str(Path(sys.path[0]).absolute().parent.parent) + "/02_DataAcquisition/01_input/Trivy"

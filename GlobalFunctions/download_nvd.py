@@ -1,6 +1,10 @@
 """
 Author: Erik O'Donoghue
+Steps:
+cd to script
+cmd = python3 download_nvd.py output.json count_cve nvd_api_key
 """
+from pathlib import Path
 
 import requests
 import time
@@ -15,14 +19,14 @@ def batch_cve_request(i, api_key):
     if response.status_code != 200:
         print(response.status_code)
         exit(1)
-#nothinh
+
     data = response.json()
     for cve_data in data['vulnerabilities']:
         ID = cve_data['cve']["id"]
         nvd_dictionary[ID] = cve_data['cve']
 
 def main():
-    hold = sys.argv
+
     if len(sys.argv) != 4:
         print("Incorrect Arguments - input: NVD total CVE count")
         exit(1)

@@ -24,7 +24,7 @@ def main():
         versions = f.read().splitlines()
 
     for version in versions:
-        install_grype(version)
+        install_grype_control_database(version)
 
     # builds a link to the next part of the processes input. Just done once if link doesn't exist yet
     path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype"
@@ -44,8 +44,14 @@ def install_grype(version):
            "|", "sh", "-s", "--", "-b", path, version]
     sp.run(" ".join(cmd), shell=True, check=True)
 
+    cmd = ["export GRYPE_DB_VALIDATE_AGE=true"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_DB_AUTO_UPDATE=true"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
     # command to change the name, so we have the version numbers as the tool title
-    cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
+    cmd = ["mv", path + "grype", path + "O"+version.replace("v", "G").replace(".", "_")]
     sp.run(" ".join(cmd), shell=True, check=True)
 
 
@@ -63,6 +69,23 @@ def install_grype_control_database(version):
     # command to change the name, so we have the version numbers as the tool title
     cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
     sp.run(" ".join(cmd), shell=True, check=True)
+
+    # delete given database, we want to use our own
+    cmd = [path + version.replace("v", "G").replace(".", "_"), "db delete"]
+    sp.run(" ".join(cmd), shell=True, check=True)
+
+    cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    # setting the current database
+    repo_home = str(Path(sys.path[0]).absolute().parent) + "/01_input/build/vulnerability-db_v5_2023-09-29T17:40:23Z_7123fb7335c5ba56dd1a.tar.gz"
+    cmd = [path + version.replace("v", "G").replace(".", "_"), "db import", repo_home]
+    sp.run(" ".join(cmd), shell=True, check=True)
+
+
 
 
 main()
