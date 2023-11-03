@@ -11,11 +11,9 @@ import sys
 import subprocess as sp
 from pathlib import Path
 
-
 # Tips:
 # -some versions of Grype and Trivy aren't available for download if you have a version not present it will throw an error
 #
-
 
 def install_trivy(version):
     """Given a version in string form(vX.XX.X or vX.X.X) downloads the associated Trivy version and save it ."""
@@ -32,7 +30,6 @@ def install_trivy(version):
     cmd = ["mv", path + "trivy", path + version.replace("v", "T").replace(".", "_")]
     sp.run(" ".join(cmd), shell=True, check=True)
 
-
 def install_trivy_control_database(version):
     """Given a version in string form(vX.XX.X or vX.X.X) downloads the associated Trivy version and save it ."""
 
@@ -40,10 +37,27 @@ def install_trivy_control_database(version):
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy/"
 
     # command to install grype version of interest
-    cmd = ["docker pull aquasec/trivy-db:v1-2023021412"]
+    cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh",
+           "|", "sh", "-s", "--", "-b", path, version]
     sp.run(" ".join(cmd), shell=True, check=True)
 
+    # command to change the name, so we have the version numbers as the tool title
+    cmd = ["mv", path + "trivy", path + version.replace("v", "T").replace(".", "_")]
+    sp.run(" ".join(cmd), shell=True, check=True)
 
+    cmd = [path + version.replace("v", "T").replace(".", "_"), "image --reset"]
+    sp.run(" ".join(cmd), shell=True, check=True)
+
+    #cmd = ["docker", "run - -rm - v ./trivy-data:/root/.cache aquasec/trivy:0.29.2 image --download-db-only"]
+
+    path_database = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/03_incremental/db.tar.gz"
+    path_og = str(Path(sys.path[0]).absolute().parent.parent.parent) + "/.cache/trivy/db"
+    cmd = ["mkdir -p", path_og]
+    sp.run(" ".join(cmd), shell=True, check=True)
+    cmd = ["cd", path_og]
+    sp.run(" ".join(cmd), shell=True, check=True)
+    cmd = ["tar xvf", path_database, "-C", path_og]
+    sp.run(" ".join(cmd), shell=True, check=True)
 
 def main():
     """We read in the input txt file with desired Trivy versions and run through our install grype version function"""
@@ -55,13 +69,12 @@ def main():
         versions = f.read().splitlines()
 
     for version in versions:
-        install_trivy(version)
- # did it work?
+        install_trivy_control_database(version)
+
     # builds a link to the next part of the processes input. Just done once
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy"
     shadow_path = str(Path(sys.path[0]).absolute().parent.parent) + "/02_DataAcquisition/01_input/Trivy"
     if not os.path.exists(shadow_path):
         link(path, shadow_path)
-
 
 main()

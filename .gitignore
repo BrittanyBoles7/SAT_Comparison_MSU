@@ -16,12 +16,4 @@
 /GlobalFunctions/research_images.txt
 /GlobalFunctions/NVD_API_key.txt
 /GlobalFunctions/nvd_database.json
-/01_ToolVersions/01_input/build/
-/01_ToolVersions/01_input/build/vulnerability-db_v5_2023-09-29T17:40:23Z_7123fb7335c5ba56dd1a.tar.gz
-01_ToolVersions/01_input/build/vulnerability.db
-/01_ToolVersions/01_input/grype-db
-/01_ToolVersions/01_input/vunnel
-/01_ToolVersions/03_incremental/data/
-/01_ToolVersions/04_product/Trivy/db.tar.gz
-/01_ToolVersions/01_input/build/
-01_ToolVersions/01_input/build/vulnerability.db
+/01_ToolVersions/03_incremental/db.tar.gz

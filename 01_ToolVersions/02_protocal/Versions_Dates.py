@@ -25,7 +25,7 @@ def main():
         f.write('v0.63.0')
 
         with open(str(Path(sys.path[0]).absolute().parent) + '/01_input/TrivyVersions.txt', 'w') as f:
-            f.write('v0.63.0')
+            f.write('v0.30.0')
 
 
 main()
