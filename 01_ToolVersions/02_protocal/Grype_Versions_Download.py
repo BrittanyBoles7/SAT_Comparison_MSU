@@ -24,7 +24,7 @@ def main():
         versions = f.read().splitlines()
 
     for version in versions:
-        install_grype(version)
+        install_grype_controlled_database(version)
 
     # builds a link to the next part of the processes input. Just done once if link doesn't exist yet
     path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype"
@@ -59,8 +59,8 @@ def install_grype_controlled_database(version):
     cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
     sp.run(cmd, shell=True, check=True)
 
-    # setting the database to the one we have stored
-    repo_home = str(Path(sys.path[0]).absolute().parent) + "/01_input/db/"
+    # setting the database to the one we have stored on our local computer/ the database we want to use
+    repo_home = str(Path(sys.path[0]).absolute().parent.parent.parent) + "/db/"
     cmd = ["cp -r", repo_home, str(Path(sys.path[0]).absolute().parent.parent.parent) + "/.cache/grype/"]
     sp.run(" ".join(cmd), shell=True, check=True)
 

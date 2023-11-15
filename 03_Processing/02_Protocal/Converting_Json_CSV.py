@@ -46,21 +46,21 @@ class Json_To_CSV:
         return df
 
     @staticmethod
-    def vuln_relation_investigation(df):
+    def vuln_relation_investigation(df, difference_array):
         """
         Here we look into the vulns from either grype or trivy and investigate how they handle them/ mainly grype
+        :param difference_array:
         :param df:pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
         """
         for i, vuln in df.iterrows():  # for each vuln in the image
             if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln[
                 'vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
-
+                # if 'NA' not in vuln['vuln_id']:
                 # gets info on the vuln from the open source vulnerabilities databases
                 response = requests.get("https://api.osv.dev/v1/vulns/" + vuln['vuln_id']).text
                 if 'aliases' in response:  # if there is an aliases for this vuln, we want to replace this vuln with its aliases or at least check it out
                     list_things = response.split(",")  # response long string of info about the vuln
                     for s in list_things:
-
                         if 'aliases' in s:  # we only want to info about related vulns
                             # just the tedious work of splitting a string
                             aliases_list = (s.split(":", 1)[1]
@@ -75,6 +75,9 @@ class Json_To_CSV:
                                     index_vuln_id = df[df['vuln_id'] == a].index
                                     current_vuln = df.loc[index_vuln_id]
 
+                                    # for a bar graph counting quantities at different disagreements, we add 50 because that's where the "zero" count will be.
+                                    difference_array[50 + vuln['count'] - current_vuln['count'].values[0]] = \
+                                        difference_array[50+vuln['count'] - current_vuln['count'].values[0]] + 1
                                     if vuln['count'] != current_vuln['count'].values[
                                         0]:  # I expected same number but might not be true.
                                         print("vuln:    " + str(vuln['vuln_id']) + " count: " + str(vuln['count']))
@@ -88,6 +91,7 @@ class Json_To_CSV:
             else:
                 pass
                 # print(vuln['vuln_id'])
+        return difference_array
 
     @staticmethod
     def save_data_to_file(v: str, tool: str, df: pd.DataFrame):

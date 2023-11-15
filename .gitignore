@@ -17,6 +17,3 @@
 /GlobalFunctions/NVD_API_key.txt
 /GlobalFunctions/nvd_database.json
 /01_ToolVersions/03_incremental/db.tar.gz
-/01_ToolVersions/01_input/db/5/vulnerability.db
-/01_ToolVersions/01_input/db/
-*Db.*

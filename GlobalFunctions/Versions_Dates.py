@@ -21,11 +21,11 @@ from pathlib import Path
 
 # creates .txt file of versions
 def main():
-    with open(str(Path(sys.path[0]).absolute().parent) + '/01_input/GrypeVersions.txt', 'w') as f:
+    with open(str(Path(sys.path[0]).absolute()) + '/01_ToolVersions/01_input/GrypeVersions.txt', 'w') as f:
         f.write('v0.63.0')
 
-        with open(str(Path(sys.path[0]).absolute().parent) + '/01_input/TrivyVersions.txt', 'w') as f:
-            f.write('v0.30.0')
+    with open(str(Path(sys.path[0]).absolute()) + '/01_ToolVersions/01_input/TrivyVersions.txt', 'w') as f:
+        f.write('v0.30.0')
 
 
 main()

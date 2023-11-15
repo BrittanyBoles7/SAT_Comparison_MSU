@@ -1,9 +1,10 @@
+import os
 import sys
 from pathlib import Path
 import pandas as pd
-import requests
 from Converting_Json_CSV import Json_To_CSV
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Json_To_CSV_Grype(Json_To_CSV):
@@ -16,11 +17,12 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
         # make sure indexes pair with number of rows
         for index, row in df_json.iterrows():
+            difference_array = np.zeros(100)
             df_g = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])  # for each version get a data frame
             for i in row['json_list']:
 
                 df_image = self.image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
-                self.vuln_relation_investigation(df_image)  # just looking at related vulns and how they are handled
+                difference_array = self.vuln_relation_investigation(df_image, difference_array)  # just looking at related vulns and how they are handled
 
                 name_list = [i['source']['target']['userInput']] * len(df_image)  # list of the image name repeated for master_DataFrame
 
@@ -29,6 +31,8 @@ class Json_To_CSV_Grype(Json_To_CSV):
                 df_g = pd.concat([df_g, df_image])  # building one data frame with info of all images run through this version
 
             self.save_data_to_file(row['version'], "Grype", df_g)
+            self.graph_differences(difference_array)
+        return
 
     @staticmethod
     def image_vuln_info(i):
@@ -57,6 +61,23 @@ class Json_To_CSV_Grype(Json_To_CSV):
             df_image.loc[0] = ['NA', 'NA', 'NA']
 
         return df_image
+
+    @staticmethod
+    def graph_differences(values):
+        difference_array = np.arange(-50, 50)
+        # creating the dataset
+        values[50] = 0
+        fig = plt.figure(figsize=(10, 5))
+
+        # creating the bar plot
+        plt.bar(difference_array, values, color='maroon',
+                width=0.4)
+
+        plt.xlabel("difference between vendor count and aliases count")
+        plt.ylabel("number of times difference occurred")
+        plt.title("Difference in counts of same vuln in same image")
+        plt.show()
+        return
 
 
 def main():

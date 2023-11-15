@@ -5,7 +5,10 @@ import subprocess as sp
 import sys
 from pathlib import Path
 
-
+'''
+This is a function to download docker images. I have a text file of 
+all the docker images I want to download and the versions
+'''
 def main():
     with open(
             str(Path(sys.path[0]).absolute()) + "/research_images.txt",
@@ -26,7 +29,6 @@ def main():
         else:
             print(i)
 
-        # elasticsearch:8.9.1 couldn't be pulled rate limit
 
 
 main()

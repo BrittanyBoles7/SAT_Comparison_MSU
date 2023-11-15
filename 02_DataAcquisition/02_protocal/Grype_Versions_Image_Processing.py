@@ -28,12 +28,12 @@ class GrypeImageProcessing:
         # for each grype version
         for g in self.GVs:
             grype_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/" + g
-            self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]
+            # self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]
             # for each docker image
-            #for i in self.images:
-            for z in range(0, 50):
-                i = self.images[z]
-                # image comes out as a byte and we need string form
+            for i in self.images:
+           # for z in range(0, 50):
+                # i = self.images[z]
+                # image comes out as a byte, and we need string form
                 image = i.decode('utf-8')
 
                 # if the directory doesn't exist yet create it
@@ -47,7 +47,7 @@ class GrypeImageProcessing:
                 if not os.path.exists(
                         output_path):  # remove if you want to run all images, only here to save time and not rerun data
                     # command line to run the image through the grype version
-                    cmd = [grype_version_filepath, image, "-o json>", output_path]
+                    cmd = [grype_version_filepath, image, "--scope all-layers -o json>", output_path]
                     sp.run(" ".join(cmd), shell=True, check=True)
 
 

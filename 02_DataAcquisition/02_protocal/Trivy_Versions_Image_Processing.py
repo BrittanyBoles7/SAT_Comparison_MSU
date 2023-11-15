@@ -27,7 +27,7 @@ class TrivyImageProcessing:
 
         for t in self.TVs:  # foreach versions of trivy
             trivy_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/" + t
-            self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]  # "don't care"(these aren't images were using for the research)
+            # self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]  # "don't care"(these aren't images were using for the research)
 
             for i in self.images:  # for each docker image
                 # image comes out as a byte and we need string form
@@ -41,10 +41,11 @@ class TrivyImageProcessing:
                 output_path = (
                             str(Path(sys.path[0]).absolute().parent) + "/04_product/Trivy/" + t + "/" + image + ".json")
 
-                if not os.path.exists(
-                        output_path):  # remove if you want to run all images, only here to save time and not rerun data
+                if not os.path.exists(output_path):  # remove if you want to run all images, only here to save time and not rerun data
                     # command line to run the image through the trivy version
-                    cmd = [trivy_version_filepath, "image -f json -o", output_path, image]
+                    #./T0_35_0 image --skip-update --format json --output result.json xwiki:15.7
+
+                    cmd = [trivy_version_filepath, "image --timeout 30m --skip-update --format json --output", output_path, image]
                     sp.run(" ".join(cmd), shell=True, check=True)
 
     def processing_control_database(self):

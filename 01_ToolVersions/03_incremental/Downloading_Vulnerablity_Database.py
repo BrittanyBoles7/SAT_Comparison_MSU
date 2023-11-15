@@ -7,6 +7,11 @@ from pathlib import Path
 
 
 def install_Grype_control_database():
+    """
+    here we download all databases possible for grype to use and then could later point to it.
+    instead currently we just saved the database from a certain date and use that to compare vulnerabilities.
+    We pull Trivy's database from the same date.
+    """
     # make file path to save out to
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/01_input"
 
@@ -44,7 +49,10 @@ def install_Grype_control_database():
 
 # install_Grype_control_database()
 
-
+'''
+Updated way to download the trivy vulnerability database. 
+They collect and store all databases, and can be easily pulled and then pointed to
+'''
 def install_trivy_control_database():
     # make file path to save out to
     path_here = str(Path(sys.path[0]).absolute())
