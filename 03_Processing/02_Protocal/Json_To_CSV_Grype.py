@@ -17,12 +17,12 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
         # make sure indexes pair with number of rows
         for index, row in df_json.iterrows():
-            difference_array = np.zeros(100)
+            #difference_array = np.zeros(100)
             df_g = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])  # for each version get a data frame
             for i in row['json_list']:
 
                 df_image = self.image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
-                difference_array = self.vuln_relation_investigation(df_image, difference_array)  # just looking at related vulns and how they are handled
+                #difference_array = self.vuln_relation_investigation(df_image, difference_array)  # just looking at related vulns and how they are handled
 
                 name_list = [i['source']['target']['userInput']] * len(df_image)  # list of the image name repeated for master_DataFrame
 
@@ -31,7 +31,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
                 df_g = pd.concat([df_g, df_image])  # building one data frame with info of all images run through this version
 
             self.save_data_to_file(row['version'], "Grype", df_g)
-            self.graph_differences(difference_array)
+           # self.graph_differences(difference_array)
         return
 
     @staticmethod

@@ -27,6 +27,7 @@ class GrypeImageProcessing:
         """goes through each version of Grype and runs every docker image through it. Saves output as json"""
         # for each grype version
         for g in self.GVs:
+            print(g)
             grype_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/" + g
             # self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]
             # for each docker image

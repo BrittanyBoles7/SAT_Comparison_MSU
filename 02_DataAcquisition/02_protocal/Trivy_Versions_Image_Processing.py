@@ -28,7 +28,7 @@ class TrivyImageProcessing:
         for t in self.TVs:  # foreach versions of trivy
             trivy_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/" + t
             # self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]  # "don't care"(these aren't images were using for the research)
-
+            print(t)
             for i in self.images:  # for each docker image
                 # image comes out as a byte and we need string form
                 image = i.decode('utf-8')
@@ -44,38 +44,10 @@ class TrivyImageProcessing:
                 if not os.path.exists(output_path):  # remove if you want to run all images, only here to save time and not rerun data
                     # command line to run the image through the trivy version
                     #./T0_35_0 image --skip-update --format json --output result.json xwiki:15.7
-
-                    cmd = [trivy_version_filepath, "image --timeout 30m --skip-update --format json --output", output_path, image]
+                    #--offline-scan
+                    cmd = [trivy_version_filepath, "image --timeout 30m --skip-update --offline-scan --format json --output", output_path, image]
                     sp.run(" ".join(cmd), shell=True, check=True)
 
-    def processing_control_database(self):
-        """goes through each version of trivy and runs every docker image through it. Saves output as json"""
-
-        for t in self.TVs:  # foreach versions of trivy
-            trivy_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/" + t
-
-            for i in self.images:  # for each docker image
-
-                # image comes out as a byte and we need string form
-                image = i.decode('utf-8')
-
-                # if the directory doesn't exist yet create it
-                if not os.path.exists(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t):
-                    os.makedirs(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t)
-
-                # where we want to save the json that contains vulnerability info from the image run through the trivy version
-                output_path = (
-                            str(Path(sys.path[0]).absolute().parent) + "/04_product/Trivy/" + t + "/" + image + ".json")
-
-                if not os.path.exists(
-                        output_path):  # remove if you want to run all images, only here to save time and not rerun data
-                    # command line to run the image through the trivy version
-                    repo_home = str(Path(sys.path[0]).absolute().parent.parent) + "/GlobalFunctions/nvd_database.json"
-                    cmd = [trivy_version_filepath, "image --db-repository", repo_home, "-f json -o", output_path, image]
-                    # cmd = [trivy_version_filepath, "image --vuln-type all --vuln-db", repo_home, "-f json -o", output_path, image]
-                    sp.run(" ".join(cmd), shell=True, check=True)
-
-                    # trivy image --skip-update image
 
 
 def main():

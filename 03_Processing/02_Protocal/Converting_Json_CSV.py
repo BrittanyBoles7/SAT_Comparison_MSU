@@ -10,6 +10,8 @@ import pandas as pd
 from pathlib import Path
 import requests
 
+from GlobalFunctions.Symbolic_Link import link
+
 
 class Json_To_CSV:
     df_json = pd.DataFrame()
@@ -103,3 +105,9 @@ class Json_To_CSV:
             os.makedirs(outpath_directory)
 
         df.to_csv(outpath_directory + v + '.csv')
+
+        # link this output to the input of next step iff not already done, which we check by seeming if shadow folder exists because it's created when linked
+        path = str(Path(sys.path[0]).absolute().parent) + '/04_product/' + tool + '/'
+        shadow_path = str(Path(sys.path[0]).absolute().parent.parent) + "/04_DataAnalysis/01_input/Grype"
+        if not os.path.exists(shadow_path):
+            link(path, shadow_path)
