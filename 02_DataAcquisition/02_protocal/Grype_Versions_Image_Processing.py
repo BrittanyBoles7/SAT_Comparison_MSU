@@ -48,7 +48,7 @@ class GrypeImageProcessing:
                 if not os.path.exists(
                         output_path):  # remove if you want to run all images, only here to save time and not rerun data
                     # command line to run the image through the grype version
-                    cmd = [grype_version_filepath, image, "--scope all-layers -o json>", output_path]
+                    cmd = [grype_version_filepath, image, "--scope all-layers -o json>", output_path] #by cve
                     sp.run(" ".join(cmd), shell=True, check=True)
 
 
