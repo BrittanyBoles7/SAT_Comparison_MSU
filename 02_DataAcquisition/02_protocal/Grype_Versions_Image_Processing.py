@@ -23,13 +23,15 @@ class GrypeImageProcessing:
         # list of the different images (note this comes out as a list of bytes)
         self.images = sp.check_output("docker images --format '{{.Repository}}:{{.Tag}}'", shell=True).splitlines()
 
+
     def processing(self):
         """goes through each version of Grype and runs every docker image through it. Saves output as json"""
         # for each grype version
         for g in self.GVs:
             print(g)
             grype_version_filepath = str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/" + g
-            # self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]
+            self.images = [x for x in self.images if not x.decode('utf-8').__contains__("latest")]
+
             # for each docker image
             for i in self.images:
            # for z in range(0, 50):
