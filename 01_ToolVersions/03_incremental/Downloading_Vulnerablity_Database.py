@@ -3,9 +3,10 @@ import sys
 from pathlib import Path
 
 
-# old code to try to download Grype and Trivy's databases vendor by vendor
+# Downloading vulnerability databases for static use. "offline environment" So we can always recreate results. Both for grype and Trivy
 
-
+# We don't use this way for Grype currently, we just save the vulnerability database grype has on saved on our local machine the same
+# day we download Trivy's vulnerability database. This makes them as close as possible and is easy.
 def install_Grype_control_database():
     """
     here we download all databases possible for grype to use and then could later point to it.
@@ -23,26 +24,28 @@ def install_Grype_control_database():
     vendors = ['alpine', 'amazon', 'chainguard', 'debian', 'github', 'mariner', 'nvd', 'oracle', 'rhel', 'sles',
                'ubuntu', 'wolfi']
 
-    for v in vendors:
-        # # a tool that grype-db uses to build databases/download them
-        # cmd = ["pip install vunnel"]
-        # sp.run(" ".join(cmd), shell=True, check=True)
-        #
-        # # cmd = ["mv", path_og + "/.local/bin/vunnel", path + "/"]
-        # # sp.run(" ".join(cmd), shell=True, check=True)
-        #
-        # # ask vunnel to get "x" database
-        # cmd = [path + "/vunnel", "-v", "run", "nvd"]
-        # sp.run(" ".join(cmd), shell=True, check=True)
+    # # a tool that grype-db uses to build databases/download them you might need to install?
+    # cmd = ["pip install vunnel"]
+    # sp.run(" ".join(cmd), shell=True, check=True)
+    #
+    # # cmd = ["mv", path_og + "/.local/bin/vunnel", path + "/"]
+    # # sp.run(" ".join(cmd), shell=True, check=True)
+    #
+    # # ask vunnel to get "x" database
+    # cmd = [path + "/vunnel", "-v", "run", "nvd"]
+    # sp.run(" ".join(cmd), shell=True, check=True)
 
-        # pull the database into grype-db
+    for v in vendors:
+
+        # pull all the upsteam vulnerability data sources to local cache
         cmd = [path + "/grype-db", "pull", "-g -p", v]  # ??
         sp.run(" ".join(cmd), shell=True, check=True)
 
-        # build and format that database?
+        # build a SQLite DB from the vulnerability data for a particular schema version
         cmd = [path + "/grype-db", "build", "-g", "--dir=" + path + "/build", "-p", v]
         sp.run(" ".join(cmd), shell=True, check=True)
 
+        # Package the already built DB file into an archive ready for upload and serving.
         cmd = [path + "/grype-db", "package", "--dir=" + path + "/build"]
         sp.run(" ".join(cmd), shell=True, check=True)
 

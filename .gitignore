@@ -13,10 +13,12 @@
 /03_Processing/01_input/Trivy/
 /03_Processing/03_incremental/connectedVulnerabilityIDs.csv
 /01_ToolVersions/03_incremental/images.txt
-/GlobalFunctions/research_images.txt
+/00_DockerImages/01_input/research_images.txt
 /GlobalFunctions/NVD_API_key.txt
 /GlobalFunctions/nvd_database.json
 /01_ToolVersions/03_incremental/db.tar.gz
 /04_DataAnalysis/01_input/Grype/
 /04_DataAnalysis/01_input/Grype_v_d - Sheet1.csv
 /04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
+/00_DockerImages/04_product/docker-projects-25-benchmark.json
+/00_DockerImages/04_product/docker-projects-163-benchmark.json

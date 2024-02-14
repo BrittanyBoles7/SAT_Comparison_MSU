@@ -21,7 +21,7 @@ all the docker images I want to download and the versions
 def main():
 
     with open(
-            str(Path(sys.path[0]).absolute()) + "/research_images.txt",
+            str(Path(sys.path[0]).absolute().parent) + "/01_input/research_images.txt",
             "r") as f:
         versions = (f.read().splitlines()[0]).split(",")
 

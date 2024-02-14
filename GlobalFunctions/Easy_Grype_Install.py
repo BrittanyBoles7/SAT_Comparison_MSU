@@ -18,7 +18,7 @@ def Running_Grype():
         # where we want to save the json that contains vulnerability info from the image run through the grype version
         output_path ="OUTPUT PATH YOU WANT RESULTS TO GO TO" + image + ".json"
 
-        # OTHER CONFIGS YOU COULD ADD: --scope all-layers  --by-cve
+        # OTHER CONFIGS YOU COULD ADD: --scope all-layers  --by-cve etc.
         cmd = [grype_version_filepath, image, " -o json>", output_path]  # by cve
         sp.run(" ".join(cmd), shell=True, check=True)
 
