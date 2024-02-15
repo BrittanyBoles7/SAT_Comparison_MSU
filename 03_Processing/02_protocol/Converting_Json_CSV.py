@@ -55,8 +55,7 @@ class Json_To_CSV:
         :param df:pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
         """
         for i, vuln in df.iterrows():  # for each vuln in the image
-            if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln[
-                'vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
+            if 'CVE' not in vuln['vuln_id'] and 'NA' not in vuln['vuln_id']:  # we want cve form and na is fine as well so skip over if vuln is one
                 # if 'NA' not in vuln['vuln_id']:
                 # gets info on the vuln from the open source vulnerabilities databases
                 response = requests.get("https://api.osv.dev/v1/vulns/" + vuln['vuln_id']).text
@@ -108,6 +107,6 @@ class Json_To_CSV:
 
         # link this output to the input of next step iff not already done, which we check by seeming if shadow folder exists because it's created when linked
         path = str(Path(sys.path[0]).absolute().parent) + '/04_product/' + tool + '/'
-        shadow_path = str(Path(sys.path[0]).absolute().parent.parent) + "/04_DataAnalysis/01_input/Grype"
+        shadow_path = str(Path(sys.path[0]).absolute().parent.parent) + "/04_DataAnalysis/01_input/"+tool
         if not os.path.exists(shadow_path):
             link(path, shadow_path)
