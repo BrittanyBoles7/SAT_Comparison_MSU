@@ -22,3 +22,5 @@
 /04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
 /00_DockerImages/04_product/docker-projects-25-benchmark.json
 /00_DockerImages/04_product/docker-projects-163-benchmark.json
+/04_DataAnalysis/02_analysis/ViolinPlots_Grype_Trivy.png
+/04_DataAnalysis/02_analysis/Figure_1.png

@@ -2,35 +2,37 @@ import sys
 from pathlib import Path
 import seaborn as sns
 import pandas as pd
-
 import matplotlib.pyplot as plt
 
 
 
 def get_data():
     G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPEG0_73_0.csv", na_filter = False)
-    G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv")
-
+    G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter = False)
+    T_47 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_47_0.csv", na_filter = False)
     image_vuln_count_CPE = get_count(G_CPE)
     image_vuln_count = get_count(G_73)
 
     # Sample DataFrame (replace this with your actual DataFrame)
     data = {
-        'Image_Name': "Grype",
-        'Grype_with_CPE': image_vuln_count['count'],
+        'Image_Name': get_count(T_47)['image_name'],
+        'Trivy v0.47.0': get_count(T_47)['count'],
+        'Grype v0.73.0': get_count(G_73)['count']
     }
-
+    # Define custom color palette
+    custom_palette = {'Trivy v0.47.0': (0.8, 0.95, 0.7), 'Grype v0.73.0': (0.5,0.7, 0.95)}
     df = pd.DataFrame(data)
 
     # Melt the DataFrame to create a long-form DataFrame
     df_melted = pd.melt(df, id_vars=['Image_Name'], var_name='Tool', value_name='Vulnerabilities')
 
-    # Create violin plots
-    plt.figure(figsize=(10, 6))
-    sns.violinplot(x='Tool', y='Vulnerabilities', data= df_melted)
+    # Create violin plots for each tool
+    plt.figure(figsize=(12, 6))
+    sns.violinplot(x='Tool', y='Vulnerabilities', data=df_melted, inner='quartile', palette= custom_palette)
+
     plt.title('Distribution of Vulnerabilities by Tool')
     plt.xlabel('Tool')
-    plt.ylabel('Number of Vulnerabilities')
+    plt.ylabel('Number of Vulnerabilities Per Image')
     plt.show()
 
 
@@ -44,7 +46,7 @@ def get_count(df_input):
     for i, g in df_input.iterrows():
         if current_image in g['image_name']:
             count = count + int(g['count'])
-        elif  df_g['image_name'].__contains__(current_image):
+        elif df_g['image_name'].__contains__(current_image):
             print("huh " + current_image)
         else:
             new_row = [current_image, count]
