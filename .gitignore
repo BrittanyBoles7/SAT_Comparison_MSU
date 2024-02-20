@@ -24,3 +24,5 @@
 /00_DockerImages/04_product/docker-projects-163-benchmark.json
 /04_DataAnalysis/02_analysis/ViolinPlots_Grype_Trivy.png
 /04_DataAnalysis/02_analysis/Figure_1.png
+/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
+/04_DataAnalysis/02_analysis/Grype_related.csv
