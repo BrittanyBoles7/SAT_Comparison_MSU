@@ -14,7 +14,27 @@ class Json_To_CSV_Grype(Json_To_CSV):
         self.create_data_frame(self.df_json)
 
     def create_data_frame(self, df_json):
+        # for i, a, image, vuln_id, severity, count, related_vuln in G_CPE.itertuples():
+        # make sure indexes pair with number of rows
+        for index, ver, json_list in df_json.itertuples():
 
+            df_g = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count','related_vuln'])  # for each version get a data frame
+            for i in json_list:
+
+                df_image = self.image_vuln_info(i)  # data frame with images vuln info [vuln_id, severity, count]
+
+                name_list = [i['source']['target']['userInput']] * len(df_image)  # list of the image name repeated for master_DataFrame
+
+                df_image.insert(0, 'image_name', np.array(name_list), True)
+
+                df_g = pd.concat([df_g, df_image])  # building one data frame with info of all images run through this version
+
+            self.save_data_to_file(ver, "Grype", df_g)
+
+        return
+
+    def create_data_frame2(self, df_json):
+        # for i, a, image, vuln_id, severity, count, related_vuln in G_CPE.itertuples():
         # make sure indexes pair with number of rows
         for index, row in df_json.iterrows():
             #difference_array = np.zeros(100)
@@ -31,7 +51,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
                 df_g = pd.concat([df_g, df_image])  # building one data frame with info of all images run through this version
 
             self.save_data_to_file(row['version'], "Grype", df_g)
-            #self.graph_differences(difference_array)
+
         return
 
     @staticmethod
@@ -48,6 +68,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
                     df_image.loc[index_vuln_id] = [current['id'], current['severity'], current_vuln_count + 1, df_image.loc[index_vuln_id]['related_vuln'].values[0]]  # reset the row with an updated count
 
                 else:
+                    # related vulnerability info we want to collect to add to our info about this current vuln
                     related_vuln = "NA"
                     if len(v['relatedVulnerabilities']) == 1:
                         if v['relatedVulnerabilities'][0]['id'] != current['id']:
@@ -67,22 +88,7 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
         return df_image
 
-    @staticmethod
-    def graph_differences(values):
-        difference_array = np.arange(-50, 50)
-        # creating the dataset
-        values[50] = 0
-        fig = plt.figure(figsize=(10, 5))
 
-        # creating the bar plot
-        plt.bar(difference_array, values, color='maroon',
-                width=0.4)
-
-        plt.xlabel("difference between vendor count and aliases count")
-        plt.ylabel("number of times difference occurred")
-        plt.title("Difference in counts of same vuln in same image")
-        plt.show()
-        return
 
 
 def main():

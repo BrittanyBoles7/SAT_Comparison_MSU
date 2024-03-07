@@ -21,7 +21,7 @@ def install_trivy(version):
     # make file path to save out to
     path = str(Path(sys.path[0]).absolute().parent.parent) + "/01_ToolVersions/04_product/Trivy/"
 
-    # command to install grype version of intrest
+    # command to install grype version of interest
     cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh",
            "|", "sh", "-s", "--", "-b", path, version]
     sp.run(" ".join(cmd), shell=True, check=True)

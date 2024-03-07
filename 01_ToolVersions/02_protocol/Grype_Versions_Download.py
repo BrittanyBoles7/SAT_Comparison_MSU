@@ -43,7 +43,7 @@ def install_grype_with_offline_grype_db_CPE_Matching(version):
     sp.run(" ".join(cmd), shell=True, check=True)
 
     # command to change the name, so we have the version numbers as the tool title
-    cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
+    cmd = ["mv", path + "grype", path + version.replace("v", "GCPE").replace(".", "_")]
     sp.run(" ".join(cmd), shell=True, check=True)
 
     # delete given database, we want to use our own

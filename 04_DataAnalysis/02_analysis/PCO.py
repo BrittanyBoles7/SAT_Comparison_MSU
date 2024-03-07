@@ -1,58 +1,96 @@
+import os
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pandas import DataFrame
 from skbio.stats.ordination import pcoa
 from skbio import DistanceMatrix
 import sys
 from pathlib import Path
 
 
-df_trivy = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_47_0.csv", na_filter=False)
-df_grype = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
+def PCO_Organization(df_trivy, df_grype):
+    # to start lets just get a list of all the vulnerabilities and images
+    unique_vulns = []
+    u_images = []
+    for i, a, image, vuln_id, severity, count in df_trivy.itertuples():
+        cimage = image + '_T'
+        if vuln_id not in unique_vulns and vuln_id != "NA":
+            unique_vulns.append(vuln_id)
+        if cimage not in u_images:
+            u_images.append(cimage)
 
-# Map severities to numerical values
-severity_map = {
-    'negligible': 0,
-    'low': 1,
-    'medium': 2,
-    'high': 3,
-    'critical': 4,
-    'unknown': -1
-}
+    for i, a, image, vuln_id, severity, count, related_vuln in df_grype.itertuples():
+        cimage = image + '_G'
+        if vuln_id not in unique_vulns and vuln_id != "NA":
+            unique_vulns.append(vuln_id)
+        if cimage not in u_images:
+            u_images.append(cimage)
 
-## Drop the severity column from both DataFrames
-df_grype = df_grype.drop(columns='severity')
-df_grype = df_grype.drop(columns='related_vuln')
-df_trivy = df_trivy.drop(columns='severity')
+    if 'NA' in unique_vulns:
+        print("wtf")
 
-# Combine the data from both DataFrames
-df_combined = pd.concat([df_grype, df_trivy])
+    dicts = {}
+    keys = unique_vulns
+    for i in keys:
+        dicts[i] = np.zeros(len(u_images))
 
-# Create a distance matrix with zeros along the diagonal
-#n = len(df_combined)dm_data = np.zeros((n, n))
+    # Create a dataFrame using dictionary
+    df = pd.DataFrame(dicts, index = u_images)
+    # Change the column names
+    df.columns = unique_vulns
 
-# Perform PCO
-dm = DistanceMatrix(np.ones((len(df_combined), len(df_combined))))
-pcoa_results = pcoa(dm)
+    # Change the row indexes
+    # df.index = u_images
 
-# Plot the results
-plt.figure(figsize=(8, 6))
+    for i, a, image, vuln_id, severity, count, related_vuln in df_grype.itertuples():
+        cimage = image + '_G'
+        if vuln_id != "NA":
+            df[vuln_id][cimage] = count
 
-# Plot data from df_grype
-plt.scatter(pcoa_results.samples.loc[df_grype.index, 'PC1'],
-            pcoa_results.samples.loc[df_grype.index, 'PC2'],
-            c='blue', label='Grype')
+    for i, a, image, vuln_id, severity, count in df_trivy.itertuples():
+        cimage = image + '_T'
+        if vuln_id != "NA":
+            df[vuln_id][cimage] = count
 
-# Plot data from df_trivy
-plt.scatter(pcoa_results.samples.loc[df_trivy.index, 'PC1'],
-            pcoa_results.samples.loc[df_trivy.index, 'PC2'],
-            c='green', label='Trivy')
+    df.to_csv("/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'DistanceThang.csv', index = True)
+    return
 
-plt.title('Principal Coordinate Analysis (Excluding Severity)')
-plt.xlabel('PC1')
-plt.ylabel('PC2')
-plt.legend()
-plt.grid(True)
-plt.show()
 
-print("hi")
+def main():
+    df_trivy = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_47_0.csv", na_filter=False)
+    df_grype = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
+    if not os.path.isfile(
+            "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/DistanceThang.csv"):
+        PCO_Organization(df_trivy, df_grype)
+
+    df = pd.read_csv(str(Path(sys.path[0]).absolute()) + "/DistanceThang.csv", na_filter=False)
+
+    # Perform PCO
+    dm = DistanceMatrix(df)
+    pcoa_results = pcoa(dm)
+
+    # Plot the results
+    plt.figure(figsize=(8, 6))
+
+    # Plot data from df_grype
+    plt.scatter(pcoa_results.samples.loc[df_grype.index, 'PC1'],
+                pcoa_results.samples.loc[df_grype.index, 'PC2'],
+                c='blue', label='Grype')
+
+    # Plot data from df_trivy
+    plt.scatter(pcoa_results.samples.loc[df_trivy.index, 'PC1'],
+                pcoa_results.samples.loc[df_trivy.index, 'PC2'],
+                c='green', label='Trivy')
+
+    plt.title('Principal Coordinate Analysis (Excluding Severity)')
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+    print("hi")
+main()

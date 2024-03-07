@@ -22,7 +22,12 @@
 /04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
 /00_DockerImages/04_product/docker-projects-25-benchmark.json
 /00_DockerImages/04_product/docker-projects-163-benchmark.json
-/04_DataAnalysis/02_analysis/ViolinPlots_Grype_Trivy.png
-/04_DataAnalysis/02_analysis/Figure_1.png
+/04_DataAnalysis/04_product/ViolinPlots_Grype_Trivy.png
+/04_DataAnalysis/04_product/Figure_1.png
 /04_DataAnalysis/02_analysis/Grype_CPE_related.csv
 /04_DataAnalysis/02_analysis/Grype_related.csv
+/home/brittanyboles/msusel-SATComparison-Pipe/00_DockerImages/04_product/docker-projects-163-benchmark_edited.json
+/04_DataAnalysis/04_product/
+/04_DataAnalysis/02_analysis/Grype_69_related.csv
+/04_DataAnalysis/02_analysis/DistanceThang.csv
+/00_DockerImages/04_product/docker-images.json

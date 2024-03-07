@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 def get_data():
-    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPEG0_73_0.csv", na_filter = False)
+    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_69_0.csv", na_filter = False)
     G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter = False)
     T_47 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_47_0.csv", na_filter = False)
     image_vuln_count_CPE = get_count(G_CPE)
@@ -15,8 +15,8 @@ def get_data():
 
     # Sample DataFrame (replace this with your actual DataFrame)
     data = {
-        'Image_Name': get_count(T_47)['image_name'],
-        'Trivy v0.47.0': get_count(T_47)['count'],
+        'Image_Name': get_count(G_CPE)['image_name'],
+        'Trivy v0.47.0': get_count(G_CPE)['count'],
         'Grype v0.73.0': get_count(G_73)['count']
     }
     # Define custom color palette
@@ -28,14 +28,14 @@ def get_data():
 
     # Create violin plots for each tool
     plt.figure(figsize=(12, 6))
-    sns.violinplot(x='Tool', y='Vulnerabilities', data=df_melted, inner='quartile', palette= custom_palette)
+    sns.violinplot(x='Tool', y='Vulnerabilities', data=df_melted, inner='quartile', palette= custom_palette, cut = 0)
 
-    plt.title('Distribution of Vulnerabilities by Tool')
-    plt.xlabel('Tool')
-    plt.ylabel('Number of Vulnerabilities Per Image')
+    plt.xlabel('Static Analysis Tool', fontsize='22')
+    plt.ylabel('Number of Vulnerabilities Per Image', fontsize='22')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
     plt.show()
-
-
     print("nothing")
 
 
