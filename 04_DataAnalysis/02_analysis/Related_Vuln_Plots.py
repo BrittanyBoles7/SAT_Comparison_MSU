@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # need to get counts of related vulnerabilities in the same image, we save this out in a csv file
 # lets move this earlier in the process later?
 def get_data():
-    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_69_0.csv", na_filter=False)
+    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/GCPE0_73_0.csv", na_filter=False)
     # G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
 
     # we wanted related count
@@ -41,23 +41,21 @@ def get_data():
                 if rimage == image:
                     if rvuln_id == related_vuln:
                         new_row = [image, vuln_id, severity, int(count), related_vuln, rcount]
-
                         co = co + 1
                 else:
                     pass
             df_g.loc[len(df_g.index)] = new_row
 
-    df_g.to_csv("/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'NGrype_69_related.csv',
-                index=False)
+    df_g.to_csv("/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'DGrypeCPE_73_related.csv', index=False)
 
 # graph different related vulnerability graph against each other.
 def graph_side_by_side():
     # Read the CSV files
     df_g_CPE = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/NGrype_69_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/DGrype_69_related.csv",
         na_filter=False)
     df_g = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/NGrype_73_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/DGrype_73_related.csv",
         na_filter=False)
 
     # for version 73
@@ -84,38 +82,41 @@ def graph_side_by_side():
     fig, axes = plt.subplots(1, 2, figsize=(20, 8))
 
     max_value = max(max(max(x_cpe), max(x)), max(max(y_cpe), max(y)))
+    #max_value = 40
     # Add topology lines using kernel density estimation
     # sns.kdeplot(x=x, y=y, alpha=0.5, cmap='viridis_r', fill=True)
     # sns.kdeplot(x=x, y=y, alpha=0.5, c = "blue")
 
-    sc1 = axes[0].scatter(x_coords_cpe, y_coords_cpe, s=50, c=counts_cpe, cmap='viridis', alpha=1, edgecolors='k',
+    sc1 = axes[0].scatter(x_coords_cpe, y_coords_cpe, s=50, c=counts_cpe, cmap='viridis_r', alpha=1, edgecolors='k',
                           vmax=max(max(counts),max(counts_cpe)), vmin=min(min(counts_cpe), min(counts)))
     axes[0].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
     axes[0].set_title('Grype with CPE Matching', fontsize=20)
     axes[0].set_xlabel('Vulnerability Per Image', fontsize=20)
     axes[0].set_ylabel('Related Vulnerability Per Image', fontsize=22)
+    plt.xticks(rotation=45, ha='right')
 
     # setting axis so that both graphs have the same bounds
-    axes[0].set_xticks(range(0, max_value + 5, 5))
-    axes[0].set_yticks(range(0, max_value + 5, 5))
+    axes[0].set_xticks(range(0, max_value + 5, 10))
+    axes[0].set_yticks(range(0, max_value + 5, 10))
     axes[0].tick_params(labelsize=18)  # Increase tick label size
 
     axes[0].set_xlim(-1, max_value + 1)
     axes[0].set_ylim(-1, max_value + 1)
 
-    sc2 = axes[1].scatter(x_coords, y_coords, s=50, c=counts, edgecolors='k', cmap='viridis',
+    sc2 = axes[1].scatter(x_coords, y_coords, s=50, c=counts, edgecolors='k', cmap='viridis_r',
                           vmax=max(max(counts),max(counts_cpe)), vmin=min(min(counts_cpe), min(counts)), alpha=1)
     # plt.scatter(x_coords, y_coords, s=50, c= counts, alpha=0.9)
 
     # Diagonal line of expect values
     axes[1].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
     axes[1].set_title('Grype Without CPE Matching', fontsize = 20)
-    axes[1].set_xlabel('Vulnerability Per Image' ,fontsize = 20)
+    axes[1].set_xlabel('Vulnerability Per Image',fontsize = 20)
+    plt.xticks(rotation=45, ha='right')
    # axes[1].set_ylabel('Related Vulnerability Per Image', fontsize = 22)
 
     # setting axis so that both graphs have the same bounds
-    axes[1].set_xticks(range(0, max_value + 5, 5))
-    axes[1].set_yticks(range(0, max_value + 5, 5))
+    axes[1].set_xticks(range(0, max_value + 5, 10))
+    axes[1].set_yticks(range(0, max_value + 5, 10))
     axes[1].tick_params(labelsize=18)  # Increase tick label size
 
     axes[1].set_xlim(-1, max_value + 1)
@@ -153,7 +154,7 @@ def count_per_combo(x, y):
     df = pd.DataFrame(list(pair_count.items()), columns=['(x, y)', 'count'])
     return df
 
-get_data()
+#get_data()
 graph_side_by_side()
 
 
