@@ -151,7 +151,7 @@ def sum_total_vulns():
     df_73 = pd.read_csv(
         "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/FGrype_73_related.csv",
         na_filter=False)
-
+   #new branch
     grype = df_69[df_69['r_count'] != 0]
     add = []
     for g in grype.iterrows():
