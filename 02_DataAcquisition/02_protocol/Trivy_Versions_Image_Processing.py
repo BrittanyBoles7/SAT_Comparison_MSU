@@ -54,7 +54,6 @@ class TrivyImageProcessing:
                     self.delete_dockerImage(image)
 
     def open_file_docker_images_to_download(self):
-
         path = str(Path(sys.path[0]).absolute().parent.parent) + "/00_DockerImages/04_product/docker-images.json"
         # Read the JSON file
         with open(path, 'r') as file:

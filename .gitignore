@@ -20,7 +20,7 @@
 /04_DataAnalysis/01_input/Grype/
 /04_DataAnalysis/01_input/Grype_v_d - Sheet1.csv
 /04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
-/00_DockerImages/04_product/docker-projects-25-benchmark.json
+/00_DockerImages/04_product/docker-projects-25-benchmark.jsrun
 /00_DockerImages/04_product/docker-projects-163-benchmark.json
 /04_DataAnalysis/04_product/ViolinPlots_Grype_Trivy.png
 /04_DataAnalysis/04_product/Figure_1.png
@@ -34,3 +34,6 @@
 /04_DataAnalysis/02_analysis/DGrype_69_related.csv
 /04_DataAnalysis/02_analysis/DGrype_73_related.csv
 /04_DataAnalysis/02_analysis/DGrypeCPE_73_related.csv
+/04_DataAnalysis/02_analysis/Difference_Distribution.png
+/04_DataAnalysis/02_analysis/FGrype_69_related.csv
+/04_DataAnalysis/02_analysis/FGrype_73_related.csv

@@ -92,8 +92,8 @@ class Json_To_CSV_Grype(Json_To_CSV):
 
 
 def main():
-    jc = Json_To_CSV_Grype(str(Path(sys.path[0]).absolute().parent)
-                           + "/01_input/Grype/")
+    jc = Json_To_CSV_Grype(str(Path(sys.path[0]).absolute().parent.parent)
+                           + "/02_DataAcquisition/04_product/Grype/")
 
 
 main()

@@ -78,7 +78,7 @@ def install_grype_with_offline_grype_db_CPE_Matching(version):
     cmd = ["export GRYPE_MATCH_RUST_USING_CPES=true"]
     sp.run(cmd, shell=True, check=True)  # maybe doing something?
 
-    cmd = ["export GRYPE_MATCH_STOCK_USING_CPES=true"]
+    cmd = ["export GRYPE_MATCH_STOCK_USING_CPEs=true"]
     sp.run(cmd, shell=True, check=True)  # maybe doing something?
 
     # setting the database to the one we have stored on our local computer/ the database we want to use
@@ -104,6 +104,36 @@ def install_grype_with_offline_grype_db(version):
     # delete given database, we want to use our own
     cmd = [path + version.replace("v", "G").replace(".", "_"), "db delete"]
     sp.run(" ".join(cmd), shell=True, check=True)
+    # making sure we don't need to update
+    cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]
+    sp.run(cmd, shell=True, check=True)
+
+    cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
+    sp.run(cmd, shell=True, check=True)
+
+    cmd = ["export GRYPE_MATCH_JAVA_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_DOTNET_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_GOLANG_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_JAVASCRIPT_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_PYTHON_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_RUBY_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_RUST_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
+
+    cmd = ["export GRYPE_MATCH_STOCK_USING_CPES=false"]
+    sp.run(cmd, shell=True, check=True)  # maybe doing something?
 
     # making sure we don't need to update
     cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]

@@ -14,11 +14,11 @@ class Json_To_CSV_Trivy(Json_To_CSV):
 
     def _create_data_frame(self, df_json):
 
-        for index, row in df_json.iterrows():  # goes through each version
+        for index, v, jslist in df_json.itertuples():  # goes through each version
             # each version will get dataframe with all vuln info combined from every version
             df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
 
-            for i in row['json_list']:  # for each image go through results
+            for i in jslist:  # for each image go through results
 
                 df_image = self._image_vuln_info(i)
 
@@ -26,7 +26,7 @@ class Json_To_CSV_Trivy(Json_To_CSV):
                 df_image.insert(0, 'image_name', np.array(name_list), True)
                 df_t = pd.concat([df_t, df_image])
 
-            self.save_data_to_file(row['version'], "Trivy",
+            self.save_data_to_file(v, "Trivy",
                                    df_t)  # for each version save the data frame out to csv file
 
     @staticmethod
@@ -53,8 +53,8 @@ class Json_To_CSV_Trivy(Json_To_CSV):
                             # making a new row of our data frame with vuln id, severity and the total count of times it was found in this image
                             new_row = [v['VulnerabilityID'], v['Severity'], int(1)]
                             df_image.loc[len(df_image.index)] = new_row
-                else:
-                    pass
+                elif len(i['Results']) == 1 and "Vulnerabilities" not in r:
+                    df_image.loc[0] = ['NA', 'NA', 'NA']
 
         else:
             df_image.loc[0] = ['NA', 'NA', 'NA']
