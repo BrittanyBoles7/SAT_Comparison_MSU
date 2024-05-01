@@ -12,20 +12,28 @@ vx.xx.x
 vx.xx.x
 ---
 ## 02_protocol
+
+Set Up:
+Before running these, download the static databases from our git. We collected them
+on Nov 7th. We set the tools to use static databases to have consistent and 
+reproducible results. Put Trivy's database in 03_incremental of this section
+and change the path of the db in Grype's config file, for where 
+ever store its database. Slight adjustments can also be made to use the tools 
+normally as well. In Global functions we have functions that download both tools
+with the general configurations. 
+
 Grype_Version_Download:  
-Here we have three method options. One is to simply download the Grype versions 
-given to us from 01_input. The Second is to download Grype, but set the vulnerability database
-to a saved one on our local machine. This is following their "offline" instructions, making the database static and not updated
-every 24 hours. This is to help with reproducibility of results
-if needed. The third is to download grype with the static database as before,
-and to also turn on CPE matching if version is after v0.69.0. This is because the configuration has a
-large impact on the results.  
-  
+Here given the list from 01_input, we download all the versions of Grype.
+A commented out function allows to download the tool normally, however for 
+Grype we change the database to static later with the config file 
+while running an analysis on images. To get Grype's database we just copied 
+and saved Grypes database the same day we download Trivy's, so both tools 
+databases were from the same day. 
+
 Trivy_Versions_Download:  
-Here we have two method options. One is to simply download the Trivy versions
-given to us in 01_input. The second is to download Trivy and set its vulnerability database
-to be one saved on our local machine. This makes the database static, not updated every 12 hours like
-it would be otherwise.  
+Here we download all the versions of Trivy from the input lists. We also have 
+to set Trivy's database to be static in this section. We also set Trivys database
+here.03_incremental have the function used to pull the Trivy database. 
   
 ## 03_incremental
  
@@ -36,8 +44,5 @@ running Grype and Trivy in an offline environment for reproducibility.
 
 ## 04_product
 two folders: one for Grype and one for Trivy, with the versions of each tool downloaded.
+The folders are automatically linked with the 01_input folder in 02_DataAcquisition.
 
-## Build Environment
-
-
-## Notes

@@ -20,33 +20,6 @@ class Json_To_CSV:
         self.df_json = self.version_image_json(path)
 
     @staticmethod
-    def version_image_json2(path: str):
-        # gets list of versions
-        tool_version = os.listdir(path)
-
-        version_image_json_list = list()  # list of each version's list of jsons created by running each image
-        for v in tool_version:
-            # gets all jsons in this versions folder
-            path_to_json_files = path + v
-            image_jsons_list = [filename for filename in os.listdir(path_to_json_files) if filename.endswith('.json')]
-
-            json_per_image_list = list()  # list of all the json texts for one version
-            for image_json in image_jsons_list:
-                try:
-                    # open this version, this images json file that holds info about the vuln this versions found in this image
-                    with open(os.path.join(path_to_json_files, image_json), 'r') as json_file:
-                        a = json.loads(json_file.read())
-                        json_per_image_list.append(a)
-                except:
-                    print(os.path.join(path_to_json_files, image_json))
-            version_image_json_list.append(json_per_image_list)
-
-        # creating a data frame with the versions and their corresponding list(list()) of each images json.
-        df = pd.DataFrame(list(zip(tool_version, version_image_json_list)),
-                          columns=['version', 'json_list'])
-
-        return df
-    @staticmethod
     def version_image_json(path: str):
         # gets list of versions
         tool_version = os.listdir(path)

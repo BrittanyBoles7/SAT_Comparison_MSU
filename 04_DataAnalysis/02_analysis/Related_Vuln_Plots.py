@@ -9,7 +9,7 @@ import seaborn as sns
 
 
 def get_related_counts():
-    df = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
+    df = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", na_filter=False)
     df = df[df['image_name'] != "golang:1.4rc1"]
     # filtering data
     df_r = df[df['related_vuln'] != "NA"]
@@ -42,7 +42,7 @@ def get_related_counts():
             df_g.loc[len(df_g.index)] = new_row
 
     df_g.to_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'FGrype_73_related.csv',
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'Grype_CPE_related.csv',
         index=False)
     print("nothing")
 
@@ -50,10 +50,10 @@ def get_related_counts():
 def graph_side_by_side():
     # Read the CSV files
     df_g_CPE = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/FGrype_69_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_related.csv",
         na_filter=False)
     df_g = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/FGrype_73_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_73_related.csv",
         na_filter=False)
 
     # for version 73
@@ -88,7 +88,7 @@ def graph_side_by_side():
                           vmax=max(max(counts), max(counts_cpe)), vmin=min(min(counts_cpe), min(counts)))
 
     axes[0].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
-    axes[0].set_title('Grype V0.69.0', fontsize=20)
+    axes[0].set_title('Grype With CPE Matching', fontsize=20)
     #axes[0].set_xlabel('Vendor Vulnerability Count', fontsize=20)
     axes[0].set_ylabel('Related Vulnerability Count', fontsize=22)
     plt.xticks(rotation=45, ha='right')
@@ -110,7 +110,7 @@ def graph_side_by_side():
 
     # Diagonal line of expect values
     axes[1].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
-    axes[1].set_title('Grype v0.73.0', fontsize=20)
+    axes[1].set_title('Grype Without CPE Matching', fontsize=20)
     #axes[1].set_xlabel('Vulnerability Per Image', fontsize=20)
     plt.xticks(rotation=45, ha='right')
 
@@ -146,30 +146,33 @@ def graph_side_by_side():
 def sum_total_vulns():
     # Read the CSV files
     df_69 = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/FGrype_69_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_related.csv",
         na_filter=False)
     df_73 = pd.read_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/FGrype_73_related.csv",
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_73_related.csv",
         na_filter=False)
    #new branch
-    grype = df_69[df_69['r_count'] != 0]
-    add = []
-    for g in grype.iterrows():
-        #print(g[1]['image_name'])
-        add.append(g[1]['image_name'])
-    a = set(add)
-    print(a)
-    # hold = np.array(df_69['r_count']).astype(float)
-    # total = hold.sum()
-    # print("69 number related reported: ", total)
-    # hold = np.array(df_73['r_count']).astype(float)
-    # total = hold.sum()
-    # print("73 number related reported: ", total)
-    # a = df_69['r_count'].max()
-    # filter = df_69[df_69['r_count'] == df_69['count']]
-    # print(len(filter), " the percent: ", len(filter)/30182)
-    # filter = df_73[df_73['r_count'] == df_73['count']]
-    # print(len(filter), " the percent: ", len(filter) / 30519)
+    # grype = df_69[df_69['r_count'] != 0]
+    # add = []
+    # for g in grype.iterrows():
+    #     #print(g[1]['image_name'])
+    #     add.append(g[1]['image_name'])
+    # a = set(add)
+    #print(a)
+    hold = np.array(df_69['r_count']).astype(float)
+    total = hold.sum()
+    print("69 number related reported: ", total)
+    hold = np.array(df_73['r_count']).astype(float)
+    total1 = hold.sum()
+    print("73 number related reported: ", total)
+    a = df_69[df_69['r_count'] == 95]
+
+
+
+    filter = df_69[df_69['r_count'] == df_69['count']]
+    print(len(filter), " the percent: ", len(filter) / 32233)
+    filter = df_73[df_73['r_count'] == df_73['count']]
+    print(len(filter), " the percent: ", len(filter) / 32233)
 
 
 

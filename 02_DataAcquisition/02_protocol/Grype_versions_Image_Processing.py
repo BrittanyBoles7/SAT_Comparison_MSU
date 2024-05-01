@@ -42,7 +42,7 @@ class GrypeImageProcessing:
                     # image comes out as a byte, and we need string form
                     #image = i.decode('utf-8')
 
-                    par_path = str(Path(sys.path[0]).absolute().parent) + '/04_product/Grype/' + g
+                    par_path = str(Path(sys.path[0]).absolute().parent) + '/04_product/Grype/CPE_' + g
 
                     # if the directory doesn't exist yet create it
                     if not os.path.exists(par_path):
@@ -54,7 +54,7 @@ class GrypeImageProcessing:
                     if not os.path.exists(output_path):
                         # command line to run the image through the grype version
                         self.download_dockerImage(image)
-                        cmd = [grype_version_filepath, image, "-o json>", output_path]
+                        cmd = [grype_version_filepath, image, "--config /home/brittanyboles/msusel-SATComparison-Pipe/01_ToolVersions/03_incremental/Grype_CPE.yaml -o json>", output_path]
                         sp.run(" ".join(cmd), shell=True, check=True)
                         self.delete_dockerImage(image)
 

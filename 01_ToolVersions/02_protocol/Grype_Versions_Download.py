@@ -24,7 +24,7 @@ def main():
         versions = f.read().splitlines()
 
     for version in versions:
-        install_grype_with_offline_grype_db(version)
+        install_grype(version)
 
     # builds a link to the next part of the processes input. Just done once if link doesn't exist yet
     path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype"
@@ -33,123 +33,10 @@ def main():
         link(path, shadow_path)
 
 
-def install_grype_with_offline_grype_db_CPE_Matching(version):
-    # make file path to save out to
-    path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype/"
-
-    # command to install grype version of interest
-    cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/anchore/grype/main/install.sh",
-           "|", "sh", "-s", "--", "-b", path, version]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-    # command to change the name, so we have the version numbers as the tool title
-    cmd = ["mv", path + "grype", path + version.replace("v", "GCPE").replace(".", "_")]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-    # delete given database, we want to use our own
-    cmd = [path + version.replace("v", "G").replace(".", "_"), "db delete"]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-    # making sure we don't need to update
-    cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    cmd = ["export GRYPE_MATCH_JAVA_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_DOTNET_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_GOLANG_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_JAVASCRIPT_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_PYTHON_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_RUBY_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_RUST_USING_CPES=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_STOCK_USING_CPEs=true"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    # setting the database to the one we have stored on our local computer/ the database we want to use
-    repo_home = str(Path(sys.path[0]).absolute().parent.parent.parent) + "/db/"
-    cmd = ["cp -r", repo_home, str(Path(sys.path[0]).absolute().parent.parent.parent) + "/.cache/grype/"]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-def install_grype_with_offline_grype_db(version):
-    """Given a version in string form (vX.XX.X or vX.X.X) downloads the associated Grype version and save it."""
-
-    # make file path to save out to
-    path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype/"
-
-    # command to install grype version of interest
-    cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/anchore/grype/main/install.sh",
-           "|", "sh", "-s", "--", "-b", path, version]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-    # command to change the name, so we have the version numbers as the tool title
-    cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
-    sp.run(" ".join(cmd), shell=True, check=True)
-
-    # delete given database, we want to use our own
-    cmd = [path + version.replace("v", "G").replace(".", "_"), "db delete"]
-    sp.run(" ".join(cmd), shell=True, check=True)
-    # making sure we don't need to update
-    cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    cmd = ["export GRYPE_MATCH_JAVA_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_DOTNET_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_GOLANG_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_JAVASCRIPT_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_PYTHON_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_RUBY_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_RUST_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    cmd = ["export GRYPE_MATCH_STOCK_USING_CPES=false"]
-    sp.run(cmd, shell=True, check=True)  # maybe doing something?
-
-    # making sure we don't need to update
-    cmd = ["export GRYPE_DB_VALIDATE_AGE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    cmd = ["export GRYPE_DB_AUTO_UPDATE=false"]
-    sp.run(cmd, shell=True, check=True)
-
-    # setting the database to the one we have stored on our local computer/ the database we want to use
-    repo_home = str(Path(sys.path[0]).absolute().parent.parent.parent) + "/db/"
-    cmd = ["cp -r", repo_home, str(Path(sys.path[0]).absolute().parent.parent.parent) + "/.cache/grype/"]
-    sp.run(" ".join(cmd), shell=True, check=True)
 
 
 def install_grype(version):
-    """This function is for downloading versions of grype normally, i.e. you want the most up-to-date database. """
+    """This function is for downloading versions of grype  """
     """Given a version in string form (vX.XX.X or vX.X.X) downloads the associated Grype version and save it."""
 
     # make file path to save out to
@@ -172,6 +59,29 @@ def install_grype(version):
 
 
 main()
+# def install_grype_with_offline_grype_db(version):
+#     """Given a version in string form (vX.XX.X or vX.X.X) downloads the associated Grype version and save it."""
+#
+#     # make file path to save out to
+#     path = str(Path(sys.path[0]).absolute().parent) + "/04_product/Grype/"
+#
+#     # command to install grype version of interest
+#     cmd = ["curl", "-sSfL", "https://raw.githubusercontent.com/anchore/grype/main/install.sh",
+#            "|", "sh", "-s", "--", "-b", path, version]
+#     sp.run(" ".join(cmd), shell=True, check=True)
+#
+#     # command to change the name, so we have the version numbers as the tool title
+#     cmd = ["mv", path + "grype", path + version.replace("v", "G").replace(".", "_")]
+#     sp.run(" ".join(cmd), shell=True, check=True)
+#
+#     # delete given database, we want to use our own
+#     cmd = [path + version.replace("v", "G").replace(".", "_"), "db delete"]
+#     sp.run(" ".join(cmd), shell=True, check=True)
+#
+#     # setting the database to the one we have stored on our local computer/ the database we want to use
+#     repo_home = str(Path(sys.path[0]).absolute().parent.parent.parent) + "/db/"
+#     cmd = ["cp -r", repo_home, str(Path(sys.path[0]).absolute().parent.parent.parent) + "/.cache/grype/"]
+#     sp.run(" ".join(cmd), shell=True, check=True)
 
 # def install_grype_database_by_vendor(version):
 #     """Given a version in string form (vX.XX.X or vX.X.X) downloads the associated Grype version and save it."""

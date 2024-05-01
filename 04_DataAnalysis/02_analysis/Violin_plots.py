@@ -186,17 +186,18 @@ def label_type():
     print(" Grype 69 total count = ", count)
 
 def severity_difference():
-    G_69 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_69_0.csv", na_filter=False)
+    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", na_filter=False)
     G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
     T_49 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_49_0.csv", na_filter=False)
 
-    # for i in range(0, len(G_73['image_name']) - 100):
-    #     if G_73.loc[i]['image_name'] == "golang:1.4rc1":
-    #         G_73 = G_73.drop(i)
     G_73 = G_73[G_73['image_name'] != "golang:1.4rc1"]
-    G_69 = G_69[G_69['image_name'] != "golang:1.4rc1"]
+    G_CPE = G_CPE[G_CPE['image_name'] != "golang:1.4rc1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.17.1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.5"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.2"]
 
     t_49 = distribution(T_49)
+
 
     for i in t_49['image_name']:
         filtered_G_73 = G_73[G_73['image_name'] == i]
@@ -226,24 +227,27 @@ def severity_difference():
                 print(
                     f"Disagreed severity for vulnerability {vuln_id}: G_73 - {severity_G_73}, T_49 - {severity_T_49}")
 
-def get_data_difference_vulns():
-    G_69 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_69_0.csv", na_filter=False)
+def get_data_difference_vulns2():
+    G_CPE = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", na_filter=False)
     G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
     T_49 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_49_0.csv", na_filter=False)
 
     # for i in range(0, len(G_73['image_name']) - 100):
     #     if G_73.loc[i]['image_name'] == "golang:1.4rc1":
     #         G_73 = G_73.drop(i)
-
     G_73 = G_73[G_73['image_name'] != "golang:1.4rc1"]
-    G_69 = G_69[G_69['image_name'] != "golang:1.4rc1"]
+    G_CPE = G_CPE[G_CPE['image_name'] != "golang:1.4rc1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.17.1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.5"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.2"]
+
 
     t_49 = distribution(T_49)
 
     average_num_agreed = []
     average_num_trivy = []
     average_num_grype = []
-
+    count_oh_shit = 0
     for i in t_49['image_name']:
 
         filtered_G_73 = G_73[G_73['image_name'] == i]
@@ -253,10 +257,15 @@ def get_data_difference_vulns():
         vuln_ids_G_73 = set(filtered_G_73['vuln_id'])
         vuln_ids_T_49 = set(filtered_T_49['vuln_id'])
 
+
+
         if len(vuln_ids_T_49) == len(vuln_ids_G_73):
-            print(i, vuln_ids_T_49, vuln_ids_G_73)
+            pass
+            #print(i, vuln_ids_T_49, vuln_ids_G_73)
 
         common_vuln_ids = vuln_ids_G_73.intersection(vuln_ids_T_49)
+        if len(common_vuln_ids) == len(vuln_ids_T_49) and len(common_vuln_ids) == len(vuln_ids_G_73):
+            count_oh_shit = count_oh_shit + 1
         count_common_vuln_ids = len(common_vuln_ids)
         average_num_agreed.append(count_common_vuln_ids)
         average_num_grype.append((len(vuln_ids_G_73)))
@@ -267,35 +276,41 @@ def get_data_difference_vulns():
     print("average agreed: ", np.median(agreed), "std: ", agreed.std())
     print("average grype: ", np.median(gr), "std: ", gr.std())
     print("average trivy: ", np.median(tr), "std: ", tr.std())
+    print(count_oh_shit)
 
 def get_data_difference():
-    G_73= pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_69_0.csv", na_filter=False)
-    T_49 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
-    G_69 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_49_0.csv", na_filter=False)
+    G_CPE= pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", na_filter=False)
+    G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
+    T_49 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_49_0.csv", na_filter=False)
 
     G_73 = G_73[G_73['image_name'] != "golang:1.4rc1"]
-    G_69 = G_69[G_69['image_name'] != "golang:1.4rc1"]
+    G_CPE = G_CPE[G_CPE['image_name'] != "golang:1.4rc1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.17.1"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.5"]
+    T_49 = T_49[T_49['image_name'] != "alpine:3.18.2"]
 
     g_73 = distribution(G_73)
-    t_49 = distribution(T_49).reset_index()
+    t_49 = distribution(T_49)
     t_max = max(t_49['count'])
     g_max = max(g_73['count'])
 
     # Calculate average difference
     avg_difference = np.mean(g_73['count'])
     std_dev_difference = np.std(g_73['count'])
+    total_vuln_g = np.sum(g_73['count'])
 
     print(
-        "On average, the count of vulnerabilities reported by G_73 was {:.2f} higher than T_49.".format(avg_difference))
-    print("Standard deviation of the difference:", std_dev_difference)
+        "On average, the count of vulnerabilities reported by G_73 was {:.2f} ".format(avg_difference))
+    print("Standard deviation :", std_dev_difference)
 
     # Calculate average difference
     avg_difference = np.mean(t_49['count'])
     std_dev_difference = np.std(t_49['count'])
+    total_vuln_t = np.sum(t_49['count'])
 
     print(
-        "On average, the count of vulnerabilities reported by G_73 was {:.2f} higher than T_49.".format(avg_difference))
-    print("Standard deviation of the difference:", std_dev_difference)
+        "On average, the count of vulnerabilities reported by t_49 was {:.2f} ".format(avg_difference))
+    print("Standard deviation of ", std_dev_difference)
 
     # Sample DataFrame (replace this with your actual DataFrame)
     data = {
@@ -314,7 +329,7 @@ def get_data_difference():
     print("Standard deviation of the difference:", std_dev_difference)
 
     # Count the number of images where both t_49 and g_73 found counts of 0
-    num_images_both_tools_count_zero = len(df_difference[(t_49['count'] == 0) & (g_73['count'] == 0)])
+    num_images_both_tools_count_zero = (df_difference[(t_49['count'] == 0) & (g_73['count'] == 0)])
     print("Number of images where both tools found zero vulnerabilities:", num_images_both_tools_count_zero)
 
     # Count the number of images where t_49 found counts of 0
@@ -329,20 +344,29 @@ def get_data_difference():
     # Filter rows where the absolute difference in counts is greater than 2000
     diff_greater_than_2000 = df_difference[abs(df_difference['Diff']) > 500]
     num_images_diff_greater_than_2000 = len(diff_greater_than_2000)
-    print("Number of images with a difference count greater than 500:", num_images_diff_greater_than_2000)
+    print("Number of images with a difference count greater than 500:", num_images_diff_greater_than_2000/927)
 
-    # Filter rows where the absolute difference in counts is greater than 2000
-    diff_greater_than_2000 = df_difference[abs(df_difference['Diff']) > 100]
-    num_images_diff_greater_than_2000 = len(diff_greater_than_2000)
-    print("Number of images with a difference count greater than 100:", num_images_diff_greater_than_2000)
+    # Filter rows where the absolute difference in counts is greater than 100
+    diff_greater_than_100 = df_difference[abs(df_difference['Diff']) > 100]
+    num_images_diff_greater_than_100 = len(diff_greater_than_100)
+    print("Number of images with a difference count greater than 100:", num_images_diff_greater_than_100/927)
 
-    # Filter rows where the absolute difference in counts is greater than 2000
-    diff_greater_than_2000 = df_difference[abs(df_difference['Diff']) > 0]
-    num_images_diff_greater_than_2000 = len(diff_greater_than_2000)
-    print("Number of images with a difference count at 0:", num_images_diff_greater_than_2000)
+    # Filter rows where the absolute difference in counts is greater than 0
+    diff_greater_than_0 = df_difference[abs(df_difference['Diff']) == 0]
+    num_images_diff_greater_than_0 = len(diff_greater_than_0)
+    print("Number of images with a difference count at 0:", num_images_diff_greater_than_0)
+
+    trivy = g_73.loc[df_difference['Diff'].idxmax(), 'count']
+    grype = t_49.loc[df_difference['Diff'].idxmax(), 'count']
+    # Find the row with the maximum difference in counts
+    max_diff_row = df_difference.loc[df_difference['Diff'].idxmax()]
+    print("Image Name all images:", max_diff_row['Image_Name'])
+    print("Difference in Counts:", max_diff_row['Diff'], " Grype: ", grype, " Trivy: ", trivy, )
 
     # Filter rows where both Grype and Trivy have counts not equal to 0
     filtered_df = df_difference[(g_73['count'] != 0) & (t_49['count'] != 0)]
+    num_agreed = len(filtered_df[g_73['count'] == t_49['count']])
+
     f_t = t_49[(t_49['count'] != 0)]
     f_g = g_73[(g_73['count'] != 0)]
     # Find the row with the maximum difference in counts
@@ -463,9 +487,9 @@ def distribution(df):
 
     return image_counts_df
 
-#severity_difference()
+severity_difference()
 #get_data_difference_vulns()
 
 #label_type()
-get_data_difference()
+#get_data_difference()
 # get_data()

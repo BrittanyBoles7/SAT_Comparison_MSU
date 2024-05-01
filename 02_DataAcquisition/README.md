@@ -8,9 +8,14 @@ Grype folder with versions of Grype to get results from and Trivy folder
 with versions of Trivy to get results from.
 ---
 ## 02_protocol
+both methods are currently set up to not rerun images we already have saved. So
+you need to delete the old run throws if you want new results, or change the 
+saving process.
 Grype_Versions_Image_Processing:  
 Here we run the docker images on our local machine through each of the versions of Grype
-and save the results in a json file for each image.  
+and save the results in a json file for each image. We reset the config file, pointing it
+to the saved files in 02_ToolVersions/03_incremental. There is two config files, one is to use
+CPE matching and one is to not, so we can test the differences. 
   
 Trivy_Versions_Image_Processing:  
 Here we run the docker images on our local machine through each of the versions of Trivy

@@ -14,13 +14,11 @@
 /03_Processing/03_incremental/connectedVulnerabilityIDs.csv
 /01_ToolVersions/03_incremental/images.txt
 /00_DockerImages/01_input/research_images.txt
-/GlobalFunctions/NVD_API_key.txt
-/GlobalFunctions/nvd_database.json
 /01_ToolVersions/03_incremental/db.tar.gz
 /04_DataAnalysis/01_input/Grype/
 /04_DataAnalysis/01_input/Grype_v_d - Sheet1.csv
 /04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
-/00_DockerImages/04_product/docker-projects-25-benchmark.jsrun
+/00_DockerImages/04_product/docker-images.json.json
 /00_DockerImages/04_product/docker-projects-163-benchmark.json
 /04_DataAnalysis/04_product/ViolinPlots_Grype_Trivy.png
 /04_DataAnalysis/04_product/Figure_1.png
@@ -28,12 +26,8 @@
 /04_DataAnalysis/02_analysis/Grype_related.csv
 /home/brittanyboles/msusel-SATComparison-Pipe/00_DockerImages/04_product/docker-projects-163-benchmark_edited.json
 /04_DataAnalysis/04_product/
-/04_DataAnalysis/02_analysis/Grype_69_related.csv
-/04_DataAnalysis/02_analysis/DistanceThang.csv
 /00_DockerImages/04_product/docker-images.json
-/04_DataAnalysis/02_analysis/DGrype_69_related.csv
-/04_DataAnalysis/02_analysis/DGrype_73_related.csv
-/04_DataAnalysis/02_analysis/DGrypeCPE_73_related.csv
-/04_DataAnalysis/02_analysis/Difference_Distribution.png
-/04_DataAnalysis/02_analysis/FGrype_69_related.csv
-/04_DataAnalysis/02_analysis/FGrype_73_related.csv
+/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
+/04_DataAnalysis/02_analysis/Grype_73_related.csv
+/04_DataAnalysis/02_analysis/Grype_69_related.csv
+/01_ToolVersions/03_incremental/db_dd.tar.gz
