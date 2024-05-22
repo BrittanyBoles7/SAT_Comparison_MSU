@@ -15,21 +15,47 @@ def severity_difference():
     T_49 = T_49[T_49['image_name'] != "alpine:3.18.5"]
     T_49 = T_49[T_49['image_name'] != "alpine:3.18.2"]
 
-    # Convert 'count' columns to numeric to ensure they are integers
-    G_73['count'] = pd.to_numeric(G_73['count'], errors='coerce')
-    T_49['count'] = pd.to_numeric(T_49['count'], errors='coerce')
+    diff_t = distribution(T_49)
+    diff_g = distribution(G_73)
 
-    Top_10_Image_and_Count = Total_Count(G_73, T_49)
+    Top_10_Image_and_Count = Total_Count(diff_g, diff_t)
     plot_stacked_bar(Top_10_Image_and_Count, G_73, T_49)
 
     plt.show()
 
+def distribution(df):
+    # Replace 'NA' strings with actual NaN values
+    df.replace('NA', pd.NA, inplace=True)
+
+    # Convert 'count' column to numeric
+    df['count'] = pd.to_numeric(df['count'], errors='coerce')
+
+    # Group by 'image_name' and sum the 'count' for each image
+    image_counts = df.groupby('image_name').agg({'count': 'sum'})
+
+    # Reset index to convert the result into a DataFrame
+    image_counts_df = image_counts.reset_index()
+
+    # If there are NaN values in the 'count' column, replace them with 0
+    image_counts_df['count'] = image_counts_df['count'].fillna(0)
+
+    return image_counts_df
 
 def Total_Count(g, t):
-    combined = pd.concat([g, t], ignore_index=True)
-    image_sum = combined.groupby('image_name')['count'].sum()
-    top_images = image_sum.nlargest(10)
-    return top_images.reset_index(name='count')
+    # make sure images line up
+    f = True
+    for i in range(0, len(g.axes[1])-1):
+        g_i = g.iloc(0)[i]
+        t_i = t.iloc(0)[i]
+        if g.iloc(0)[i]['image_name'] != t.iloc(0)[i]['image_name']:
+            f = False
+            break
+
+    difference = np.subtract(g['count'], t['count'])
+    g['count'] = difference
+    top_images = g.nlargest(10, 'count')
+    #top_images.reset_index(inplace=True)  # Reset index
+    return top_images
 
 
 def plot_stacked_bar(data, g, t):
@@ -45,11 +71,11 @@ def plot_stacked_bar(data, g, t):
         hold = g[g['image_name'] == i]
         sum_top_ten = sum_top_ten + np.sum(hold['count'])
 
-        n_count = hold[hold['severity'] == 'Negligible']
-        negligible_g.append(np.sum(n_count['count']))
-
         u_count = hold[hold['severity'] == 'Unknown']
         unknown_g.append(np.sum(u_count['count']))
+
+        n_count = hold[hold['severity'] == 'Negligible']
+        negligible_g.append((np.sum(n_count['count'])))
 
         l_count = hold[hold['severity'] == 'Low']
         low_g.append(np.sum(l_count['count']))
@@ -64,7 +90,7 @@ def plot_stacked_bar(data, g, t):
         critical_g.append(np.sum(c_count['count']))
 
     # check to make sure we didn't miss a label.
-    check = sum_top_ten - np.sum(unknown_g) - np.sum(low_g) - np.sum(medium_g) - np.sum(high_g) - np.sum(critical_g)
+    check = sum_top_ten - np.sum(unknown_g) - np.sum(low_g) - np.sum(medium_g) - np.sum(high_g) - np.sum(critical_g)-np.sum(negligible_g)
     if check != 0:
         print("wrong we missed a severity type: ", check)
 
@@ -83,8 +109,8 @@ def plot_stacked_bar(data, g, t):
         u_count = hold[hold['severity'] == 'UNKNOWN']
         unknown.append(np.sum(u_count['count']))
 
-        n_count = hold[hold['severity'] == 'Negligible']
-        negligible.append(np.sum(n_count['count']))
+        n_count = hold[hold['severity'] == 'NEGLIGIBLE']
+        negligible.append((np.sum(n_count['count'])))
 
         l_count = hold[hold['severity'] == 'LOW']
         low.append(np.sum(l_count['count']))
@@ -98,7 +124,12 @@ def plot_stacked_bar(data, g, t):
         c_count = hold[hold['severity'] == 'CRITICAL']
         critical.append(np.sum(c_count['count']))
 
-    # stacked side by side, bar plots for the top 10 images, stacks separated out by severities.
+        # check to make sure we didn't miss a label.
+        check = sum_top_ten - np.sum(unknown) - np.sum(low) - np.sum(medium) - np.sum(high) - np.sum(critical) - np.sum(negligible)
+        if check != 0:
+            print("wrong we missed a severity type: ", check)
+
+        # stacked side by side, bar plots for the top 10 images, stacks separated out by severities.
     index = np.arange(len(data))
     bar_width = 0.35  # Width of each bar
     gap = 0.1  # Gap between the two sets of bars
@@ -140,8 +171,6 @@ def plot_stacked_bar(data, g, t):
     # Add vertical lines between images
     for i in range(len(data) - 1):
         plt.axvline(x=i + 0.5, color='black', linestyle='--', linewidth=0.5)
-    plt.show()
-
 
 
 severity_difference()

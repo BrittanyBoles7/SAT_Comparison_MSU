@@ -6,10 +6,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def main():
+    # only do once
+    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", "Grype_CPE_related.csv")
+    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", "Grype_73_related.csv")
 
+    # scatter plots of the differences between Grypes configurations and related vulnerability counts
+    graph_side_by_side()
 
-def get_related_counts():
-    df = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", na_filter=False)
+    # total number of vulnerabilities reported with related vulnerabilities ( not unique)
+    sum_total_vulns()
+
+def get_related_counts(tool_path, output_path):
+    """Runs and gets the total number of times related vulnerabilities occur and saves out to file. """
+    df = pd.read_csv(tool_path, na_filter=False)
     df = df[df['image_name'] != "golang:1.4rc1"]
     # filtering data
     df_r = df[df['related_vuln'] != "NA"]
@@ -42,12 +52,12 @@ def get_related_counts():
             df_g.loc[len(df_g.index)] = new_row
 
     df_g.to_csv(
-        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + 'Grype_CPE_related.csv',
+        "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + output_path,
         index=False)
     print("nothing")
 
-# graph different related vulnerability graph against each other.
 def graph_side_by_side():
+    """ graph different related vulnerability graph against each other."""
     # Read the CSV files
     df_g_CPE = pd.read_csv(
         "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_related.csv",
@@ -167,18 +177,13 @@ def sum_total_vulns():
     print("73 number related reported: ", total)
     a = df_69[df_69['r_count'] == 95]
 
-
-
     filter = df_69[df_69['r_count'] == df_69['count']]
     print(len(filter), " the percent: ", len(filter) / 32233)
     filter = df_73[df_73['r_count'] == df_73['count']]
     print(len(filter), " the percent: ", len(filter) / 32233)
 
-
-
-
-# we want to see the number of times a certain ratio of related to regular vulnerabilities occur.
 def count_per_combo(x, y):
+    """ we want to see the number of times a certain ratio of related to regular vulnerabilities occur."""
     # Create a dictionary to count occurrences of each unique (x, y) pair
     pair_count = {}
     for i in range(len(x)):
