@@ -37,6 +37,7 @@ class Measuring_Differences:
                             na_filter=False)
         G_73 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", na_filter=False)
         T_49 = pd.read_csv(str(Path(sys.path[0]).absolute().parent) + "/01_input/Trivy/T0_49_0.csv", na_filter=False)
+
         self.G_73 = G_73[G_73['image_name'] != "golang:1.4rc1"]
         self.G_CPE = G_CPE[G_CPE['image_name'] != "golang:1.4rc1"]
         T_49 = T_49[T_49['image_name'] != "alpine:3.17.1"]
@@ -76,12 +77,12 @@ class Measuring_Differences:
                 pass
             else:
                 print(v)
-        print(" Trivy GHSA count", np.array(GHSA).astype(float).sum() / count)
-        print(" Trivy CVE count", np.array(CVE).astype(float).sum() / count)
-        print(" Trivy ALAS count", np.array(ALAS).astype(float).sum() / count)
-        print(" Trivy DLA count", np.array(DLA).astype(float).sum() / count)
-        print(" Trivy DSA count", np.array(DSA).astype(float).sum() / count)
-        print(" Trivy NSWG count", np.array(NSWG).astype(float).sum() / count)
+        print(" Trivy GHSA count", np.array(GHSA).astype(float).sum() )
+        print(" Trivy CVE count", np.array(CVE).astype(float).sum() )
+        print(" Trivy ALAS count", np.array(ALAS).astype(float).sum() )
+        print(" Trivy DLA count", np.array(DLA).astype(float).sum() )
+        print(" Trivy DSA count", np.array(DSA).astype(float).sum())
+        print(" Trivy NSWG count", np.array(NSWG).astype(float).sum() )
         print(" Trivy total count = ", count)
 
         GHSA = []
@@ -119,13 +120,13 @@ class Measuring_Differences:
                 pass
             else:
                 print(v)
-        print(" Grype GHSA count", np.array(GHSA).astype(float).sum() / count)
-        print(" Grype CVE count", np.array(CVE).astype(float).sum() / count)
-        print(" Grype ALAS count", np.array(ALAS).astype(float).sum() / count)
-        print(" Grype DLA count", np.array(DLA).astype(float).sum() / count)
-        print(" Grype DSA count", np.array(DSA).astype(float).sum() / count)
-        print(" Grype NSWG count", np.array(NSWG).astype(float).sum() / count)
-        print(" Grype ELSA count", np.array(ELSA).astype(float).sum() / count)
+        print(" Grype GHSA count", np.array(GHSA).astype(float).sum()  )
+        print(" Grype CVE count", np.array(CVE).astype(float).sum() )
+        print(" Grype ALAS count", np.array(ALAS).astype(float).sum() )
+        print(" Grype DLA count", np.array(DLA).astype(float).sum() )
+        print(" Grype DSA count", np.array(DSA).astype(float).sum() )
+        print(" Grype NSWG count", np.array(NSWG).astype(float).sum() )
+        print(" Grype ELSA count", np.array(ELSA).astype(float).sum())
         print(" Grype total count = ", count)
 
         GHSA = []
@@ -137,7 +138,7 @@ class Measuring_Differences:
         ELSA = []
         count = 0
         # image_name,vuln_id,severity,count,related_vuln
-        for indx, j, i, v, s, c, r in self.G_69.itertuples():
+        for indx, j, i, v, s, c, r in self.G_CPE.itertuples():
             if 'GHSA' in v:
                 GHSA.append(c)
                 count = count + float(c)
@@ -163,13 +164,13 @@ class Measuring_Differences:
                 pass
             else:
                 print(v)
-        print(" Grype CPE GHSA count", np.array(GHSA).astype(float).sum() / count)
-        print(" Grype CPE CVE count", np.array(CVE).astype(float).sum() / count)
-        print(" Grype CPE ALAS count", np.array(ALAS).astype(float).sum() / count)
-        print(" Grype CPE DLA count", np.array(DLA).astype(float).sum() / count)
-        print(" Grype CPE DSA count", np.array(DSA).astype(float).sum() / count)
-        print(" Grype CPE NSWG count", np.array(NSWG).astype(float).sum() / count)
-        print(" Grype CPE ELSA count", np.array(ELSA).astype(float).sum() / count)
+        print(" Grype CPE GHSA count", np.array(GHSA).astype(float).sum())
+        print(" Grype CPE CVE count", np.array(CVE).astype(float).sum() )
+        print(" Grype CPE ALAS count", np.array(ALAS).astype(float).sum() )
+        print(" Grype CPE DLA count", np.array(DLA).astype(float).sum() )
+        print(" Grype CPE DSA count", np.array(DSA).astype(float).sum() )
+        print(" Grype CPE NSWG count", np.array(NSWG).astype(float).sum())
+        print(" Grype CPE ELSA count", np.array(ELSA).astype(float).sum() )
         print(" Grype CPE total count = ", count)
 
     def severity_difference(self):
@@ -243,101 +244,120 @@ class Measuring_Differences:
         agreed = np.array(average_num_agreed)
         gr = np.array(average_num_grype)
         tr = np.array(average_num_trivy)
-        print("average agreed: ", np.median(agreed), "std: ", agreed.std())
-        print("average grype: ", np.median(gr), "std: ", gr.std())
-        print("average trivy: ", np.median(tr), "std: ", tr.std())
+        print("average agreed: ", np.average(agreed), "std: ", agreed.std())
+        print("average grype: ", np.average(gr), "std: ", gr.std())
+        print("average trivy: ", np.average(tr), "std: ", tr.std())
         print(count_oh_shit)
 
     def get_data_difference(self):
-
+        # gets the total vulnerabilities in each image.
         g_73 = distribution(self.G_73)
         t_49 = distribution(self.T_49)
-        t_max = max(t_49['count'])
-        g_max = max(g_73['count'])
 
+        # Create easy to use dataframe for differences
+        data = {
+            'Image_Name': g_73['image_name'],
+            'Diff': g_73['count'].subtract(t_49['count'])
+        }
+        df_difference = pd.DataFrame(data)
+
+        # --------------------------------------------------------------------------------------------------------------
         # apache-strut vuln
         a = self.T_49[self.T_49['vuln_id'] == 'CVE-2017-9805']
         b = self.G_73[self.G_73['vuln_id'] == "CVE-2017-9805"]
+        print("apache-strut vulnerability count in our corpus of Docker image found by Trivy: ", a)
+        print("apache-strut vulnerability count in our corpus of Docker image found by Grype: ", b, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
         # log4j
         c = self.T_49[self.T_49['vuln_id'] == 'CVE-2021-44228']
         d = self.G_73[self.G_73['vuln_id'] == "CVE-2021-44228"]
         d_g = self.G_73[self.G_73['vuln_id'] == "GHSA-jfh8-c2jp-5v3q"]
         c_t = self.T_49[self.T_49['vuln_id'] == "GHSA-jfh8-c2jp-5v3q"]
-        # shell shock
+        print("Log4j CVE vulnerability count in our corpus of Docker image found by Trivy: ", c)
+        print("Log4j CVE vulnerability count in our corpus of Docker image found by Grype: ", d)
+        print("Log4j GHSA vulnerability count in our corpus of Docker image found by Trivy: ", d_g)
+        print("Log4j GHSA vulnerability count in our corpus of Docker image found by Grype: ", c_t, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
+        # shell shock
         e = self.T_49[self.T_49['vuln_id'] == 'CVE-2014-6271']
         f = self.G_73[self.G_73['vuln_id'] == "CVE-2014-6271"]
+        print("shell shock vulnerability count in our corpus of Docker image found by Trivy: ", e)
+        print("shell shock vulnerability count in our corpus of Docker image found by Grype: ", f, "\n")
 
-        # Calculate average difference
+        # --------------------------------------------------------------------------------------------------------------
+        # Calculate average count for Grype
         avg_difference = np.mean(g_73['count'])
         std_dev_difference = np.std(g_73['count'])
         total_vuln_g = np.sum(g_73['count'])
 
-        print(
-            "On average, the count of vulnerabilities reported by G_73 was {:.2f} ".format(avg_difference))
-        print("Standard deviation :", std_dev_difference)
+        print("On average, the count of vulnerabilities reported by G_73 was {:.2f} ".format(avg_difference))
+        print("Standard deviation :", std_dev_difference, "\n")
 
-        # Calculate average difference
+        # --------------------------------------------------------------------------------------------------------------
+        # Calculate average count for Trivy
         avg_difference = np.mean(t_49['count'])
         std_dev_difference = np.std(t_49['count'])
         total_vuln_t = np.sum(t_49['count'])
 
-        print(
-            "On average, the count of vulnerabilities reported by t_49 was {:.2f} ".format(avg_difference))
-        print("Standard deviation of ", std_dev_difference)
+        print("On average, the count of vulnerabilities reported by t_49 was {:.2f} ".format(avg_difference))
+        print("Standard deviation of ", std_dev_difference, "\n")
 
-        # Sample DataFrame (replace this with your actual DataFrame)
-        data = {
-            'Image_Name': g_73['image_name'],
-            'Diff': g_73['count'].subtract(t_49['count'])
-        }
-
-        df_difference = pd.DataFrame(data)
-
+        # --------------------------------------------------------------------------------------------------------------
         # Calculate average difference
         avg_difference = np.mean(df_difference['Diff'])
         std_dev_difference = np.std(df_difference['Diff'])
 
-        print(
-            "On average, the count of vulnerabilities reported by G_73 was {:.2f} higher than T_49.".format(
-                avg_difference))
-        print("Standard deviation of the difference:", std_dev_difference)
+        print("On average, the count of vulnerabilities reported by G_73 was {:.2f} higher than T_49.".format(avg_difference))
+        print("Standard deviation of the difference:", std_dev_difference, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
         # Count the number of images where both t_49 and g_73 found counts of 0
         num_images_both_tools_count_zero = (df_difference[(t_49['count'] == 0) & (g_73['count'] == 0)])
-        print("Number of images where both tools found zero vulnerabilities:", num_images_both_tools_count_zero)
+        print("Number of images where both tools found zero vulnerabilities:", num_images_both_tools_count_zero, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
         # Count the number of images where t_49 found counts of 0
         num_images_t_49_count_zero = len(t_49[t_49['count'] == 0])
-
         # Count the number of images where g_73 found counts of 0
         num_images_b_73_count_zero = len(g_73[g_73['count'] == 0])
 
         print("Number of images with count 0 in t_49:", num_images_t_49_count_zero)
-        print("Number of images with count 0 in g_73:", num_images_b_73_count_zero)
+        print("Number of images with count 0 in g_73:", num_images_b_73_count_zero, "\n")
 
-        # Filter rows where the absolute difference in counts is greater than 2000
+        ahh = t_49[t_49['count'] == 0]
+        bahh = g_73[g_73['count'] == 0]
+        common_image_names = pd.merge(ahh, bahh, on='image_name')
+
+        print("overlapping zeros: ", len(common_image_names))
+        # --------------------------------------------------------------------------------------------------------------
+        # Filter rows where the absolute difference in counts is greater than 500
         diff_greater_than_2000 = df_difference[abs(df_difference['Diff']) > 500]
         num_images_diff_greater_than_2000 = len(diff_greater_than_2000)
-        print("Number of images with a difference count greater than 500:", num_images_diff_greater_than_2000 / 927)
+        print("Number of images with a difference count greater than 500:", num_images_diff_greater_than_2000 / 927, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
         # Filter rows where the absolute difference in counts is greater than 100
         diff_greater_than_100 = df_difference[abs(df_difference['Diff']) > 100]
         num_images_diff_greater_than_100 = len(diff_greater_than_100)
-        print("Number of images with a difference count greater than 100:", num_images_diff_greater_than_100 / 927)
+        print("Number of images with a difference count greater than 100:", num_images_diff_greater_than_100 / 927, "\n")
 
-        # Filter rows where the absolute difference in counts is greater than 0
+        # --------------------------------------------------------------------------------------------------------------
+        # Filter rows where the absolute difference in counts is 0
         diff_greater_than_0 = df_difference[abs(df_difference['Diff']) == 0]
         num_images_diff_greater_than_0 = len(diff_greater_than_0)
-        print("Number of images with a difference count at 0:", num_images_diff_greater_than_0)
+        print("Number of images with a difference count at 0:", num_images_diff_greater_than_0, "\n")
 
+        # --------------------------------------------------------------------------------------------------------------
+        # Find the row with the maximum difference in counts
         trivy = g_73.loc[df_difference['Diff'].idxmax(), 'count']
         grype = t_49.loc[df_difference['Diff'].idxmax(), 'count']
-        # Find the row with the maximum difference in counts
         max_diff_row = df_difference.loc[df_difference['Diff'].idxmax()]
-        print("Image Name all images:", max_diff_row['Image_Name'])
-        print("Difference in Counts:", max_diff_row['Diff'], " Grype: ", grype, " Trivy: ", trivy, )
+
+        print("Image Name with Max difference in counts:", max_diff_row['Image_Name'])
+        print("Difference in Counts:", max_diff_row['Diff'], " Grype: ", grype, " Trivy: ", trivy,"\n" )
+        # --------------------------------------------------------------------------------------------------------------
 
         # Filter rows where both Grype and Trivy have counts not equal to 0
         filtered_df = df_difference[(g_73['count'] != 0) & (t_49['count'] != 0)]
@@ -352,7 +372,7 @@ class Measuring_Differences:
         trivy = f_t.loc[filtered_df['Diff'].idxmax(), 'count']
         grype = f_g.loc[filtered_df['Diff'].idxmax(), 'count']
         print("Image Name:", max_diff_row['Image_Name'])
-        print("Difference in Counts:", max_diff_row['Diff'], " Grype: ", grype, " Trivy: ", trivy, )
+        print("Difference in Counts:", max_diff_row['Diff'], " Grype: ", grype, " Trivy: ", trivy, '\n')
 
         # max counts of Grype and Trivy difference
         min_diff = min(g_73['count'].subtract(t_49['count']))
@@ -365,10 +385,10 @@ class Measuring_Differences:
         grype = g_73.loc[max_diff_index, 'count']
         print("Image name with the largest difference in counts:", image_name_largest_diff, " Grype: ", grype,
               " Trivy: ",
-              trivy, " diff: ", max_diff)
+              trivy, " diff: ", max_diff, '\n')
 
         # Define custom color palette
-        custom_palette = {'Diff': (0.4, 1.0, 0.8)}
+        custom_palette = {'Diff': (0.6, 0.8, 0.8)}
         df = pd.DataFrame(data)
 
         # Melt the DataFrame to create a long-form DataFrame
@@ -379,10 +399,11 @@ class Measuring_Differences:
         ax = sns.violinplot(x='Tool', y='Vulnerabilities', data=df_melted, inner='quartile', palette=custom_palette,
                             cut=0)
 
-        plt.xlabel('Grype v0.73.0 minus Trivy v0.49.0', fontsize='40')
-        plt.ylabel('Vulnerability Count Difference ', fontsize='40')
+        plt.xlabel('', fontsize='32')
+        plt.ylabel('Grype - Trivy', fontsize='30')
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
+        plt.xticks([])
         plt.ylim(min_diff - min_diff % 1000, max_diff + 1000 - (max_diff % 1000))
         # Set light gray background
         ax.set_facecolor('#E0E0E0')
@@ -440,11 +461,13 @@ class Measuring_Differences:
 def main():
     # a bunch of functions showing differences between tools.
     dd = Measuring_Differences()
+
     dd.label_counts()
-    dd.severity_difference()
+
+    #dd.severity_difference()
     dd.Average_Agreeance()
-    dd.get_data_difference()
-    dd.side_by_side_violin_plots()
+    #dd.get_data_difference()
+    #dd.side_by_side_violin_plots()
 
 
 main()

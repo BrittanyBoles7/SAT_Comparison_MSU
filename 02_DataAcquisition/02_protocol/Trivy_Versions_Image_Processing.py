@@ -37,8 +37,8 @@ class TrivyImageProcessing:
                 #image = i.decode('utf-8')
 
                 # if the directory doesn't exist yet create it
-                if not os.path.exists(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t):
-                    os.makedirs(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t)
+                if not os.path.exists(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t ):
+                    os.makedirs(str(Path(sys.path[0]).absolute().parent) + '/04_product/Trivy/' + t  )
 
                 # where we want to save the json that contains vulnerability info from the image run through the trivy version
                 output_path = (

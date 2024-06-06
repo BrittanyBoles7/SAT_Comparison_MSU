@@ -60,7 +60,7 @@ class Json_To_CSV:
         if not os.path.exists(outpath_directory):
             os.makedirs(outpath_directory)
 
-        df.to_csv(outpath_directory + v + '.csv')
+        df.to_csv(outpath_directory + v + 'test.csv')
 
         # link this output to the input of next step iff not already done, which we check by seeming if shadow folder exists because it's created when linked
         path = str(Path(sys.path[0]).absolute().parent) + '/04_product/' + tool + '/'

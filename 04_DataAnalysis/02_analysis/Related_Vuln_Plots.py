@@ -6,16 +6,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 def main():
     # only do once
-    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0.csv", "Grype_CPE_related.csv")
-    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0.csv", "Grype_73_related.csv")
+    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/CPE_G0_73_0test.csv",
+                       "Grype_CPE_relatedtest.csv")
+    get_related_counts(str(Path(sys.path[0]).absolute().parent) + "/01_input/Grype/G0_73_0test.csv", "Grype_73_related.csv")
 
     # scatter plots of the differences between Grypes configurations and related vulnerability counts
     graph_side_by_side()
-
+    #check they don't get reported
     # total number of vulnerabilities reported with related vulnerabilities ( not unique)
     sum_total_vulns()
+
 
 def get_related_counts(tool_path, output_path):
     """Runs and gets the total number of times related vulnerabilities occur and saves out to file. """
@@ -30,14 +33,16 @@ def get_related_counts(tool_path, output_path):
     for i, a, image, vuln_id, severity, count, related_vuln in df_r.itertuples():  # tuples are faster
         df_image = df[df['image_name'] == image]
         if "," in related_vuln:
-            things = related_vuln.split(
-                ",")  # sometimes there is multiple related vulnerabilities, get count of each of them.
+            things = related_vuln.split(",")  # sometimes there is multiple related vulnerabilities, get count of each of them.
+
             for t in range(1, len(things)):
                 hold = things[t]
-                new_row = [image, vuln_id, severity, int(count), hold,0]  # start with related count at zero, if other vuln is found update count
+                new_row = [image, vuln_id, severity, int(count), hold, 0]  # start with related count at zero, if other vuln is found update count
                 for j, ra, rimage, rvuln_id, rseverity, rcount, rrelated_vuln in df_image.itertuples():
                     if rvuln_id == hold:
                         new_row = [image, vuln_id, severity, int(count), hold, rcount]
+                    if len(things) > 2 and rvuln_id == hold:
+                        print(new_row)
 
                 df_g.loc[len(df_g.index)] = new_row
 
@@ -55,6 +60,7 @@ def get_related_counts(tool_path, output_path):
         "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/" + output_path,
         index=False)
     print("nothing")
+
 
 def graph_side_by_side():
     """ graph different related vulnerability graph against each other."""
@@ -92,14 +98,14 @@ def graph_side_by_side():
     max_value = max(max(max(x_cpe), max(x)), max(max(y_cpe), max(y)))
     # max_value = 40
 
-    #sns.kdeplot(x=x_coords_cpe, y=y_coords_cpe, alpha=0.5, c="blue", ax= axes[0])
+    # sns.kdeplot(x=x_coords_cpe, y=y_coords_cpe, alpha=0.5, c="blue", ax= axes[0])
     sns.kdeplot(x=x_coords_cpe, y=y_coords_cpe, alpha=0.5, cmap='viridis_r', fill=True, ax=axes[0])
     sc1 = axes[0].scatter(x_coords_cpe, y_coords_cpe, s=50, c=counts_cpe, cmap='viridis_r', alpha=1, edgecolors='k',
                           vmax=max(max(counts), max(counts_cpe)), vmin=min(min(counts_cpe), min(counts)))
 
     axes[0].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
     axes[0].set_title('Grype With CPE Matching', fontsize=20)
-    #axes[0].set_xlabel('Vendor Vulnerability Count', fontsize=20)
+    # axes[0].set_xlabel('Vendor Vulnerability Count', fontsize=20)
     axes[0].set_ylabel('Related Vulnerability Count', fontsize=22)
     plt.xticks(rotation=45, ha='right')
 
@@ -112,16 +118,15 @@ def graph_side_by_side():
     axes[0].set_ylim(-1, max_value + 1)
     axes[0].set_aspect('equal')  # Set aspect ratio to be equal
 
-    #sns.kdeplot(x=x_coords, y=y_coords, alpha=0.5, c="blue", ax=axes[1])
-    sns.kdeplot(x=x_coords, y=y_coords, alpha=0.5, cmap='viridis_r', fill=True,ax=axes[1])
+    # sns.kdeplot(x=x_coords, y=y_coords, alpha=0.5, c="blue", ax=axes[1])
+    sns.kdeplot(x=x_coords, y=y_coords, alpha=0.5, cmap='viridis_r', fill=True, ax=axes[1])
     sc2 = axes[1].scatter(x_coords, y_coords, s=50, c=counts, edgecolors='k', cmap='viridis_r',
                           vmax=max(max(counts), max(counts_cpe)), vmin=min(min(counts_cpe), min(counts)), alpha=1)
-
 
     # Diagonal line of expect values
     axes[1].plot([0, max_value], [0, max_value], color='blue', linestyle='-', linewidth=2)
     axes[1].set_title('Grype Without CPE Matching', fontsize=20)
-    #axes[1].set_xlabel('Vulnerability Per Image', fontsize=20)
+    # axes[1].set_xlabel('Vulnerability Per Image', fontsize=20)
     plt.xticks(rotation=45, ha='right')
 
     # setting axis so that both graphs have the same bounds
@@ -153,6 +158,7 @@ def graph_side_by_side():
     plt.show()
     print("check")
 
+
 def sum_total_vulns():
     # Read the CSV files
     df_69 = pd.read_csv(
@@ -161,14 +167,14 @@ def sum_total_vulns():
     df_73 = pd.read_csv(
         "/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_73_related.csv",
         na_filter=False)
-   #new branch
+    # new branch
     # grype = df_69[df_69['r_count'] != 0]
     # add = []
     # for g in grype.iterrows():
     #     #print(g[1]['image_name'])
     #     add.append(g[1]['image_name'])
     # a = set(add)
-    #print(a)
+    # print(a)
     hold = np.array(df_69['r_count']).astype(float)
     total = hold.sum()
     print("69 number related reported: ", total)
@@ -182,6 +188,7 @@ def sum_total_vulns():
     filter = df_73[df_73['r_count'] == df_73['count']]
     print(len(filter), " the percent: ", len(filter) / 32233)
 
+
 def count_per_combo(x, y):
     """ we want to see the number of times a certain ratio of related to regular vulnerabilities occur."""
     # Create a dictionary to count occurrences of each unique (x, y) pair
@@ -194,7 +201,5 @@ def count_per_combo(x, y):
     df = pd.DataFrame(list(pair_count.items()), columns=['(x, y)', 'count'])
     return df
 
-#get_related_counts()
-sum_total_vulns()
-#graph_side_by_side()
 
+main()
