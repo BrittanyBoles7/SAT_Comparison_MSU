@@ -179,6 +179,7 @@ class Measuring_Differences:
         t_49 = distribution(self.T_49)  # getting a list of images
 
         sum = 0
+        total_agreed_name = 0
         for i in t_49['image_name']:
             # get results for just one image at a time
             filtered_G_73 = self.G_73[self.G_73['image_name'] == i]
@@ -192,6 +193,7 @@ class Measuring_Differences:
             common_vuln_ids = vuln_ids_G_73.intersection(vuln_ids_T_49)
 
             for vuln_id in common_vuln_ids:
+                total_agreed_name = total_agreed_name +1
                 # Filtered rows for the current vulnerability in G_73 and T_49
                 row_G_73 = filtered_G_73[filtered_G_73['vuln_id'] == vuln_id]
                 row_T_49 = filtered_T_49[filtered_T_49['vuln_id'] == vuln_id]
@@ -211,7 +213,7 @@ class Measuring_Differences:
                     sum = sum + 1
                     # print(f"Disagreed severity for vulnerability {vuln_id}: G_73 - {severity_G_73}, T_49 - {severity_T_49}")
 
-        print("Grype and Trivy disagreed on severity: ", sum, " number of times")
+        print("Grype and Trivy disagreed on severity: ", sum/total_agreed_name, " number of times")
 
     def Average_Agreeance(self):
 
@@ -300,6 +302,8 @@ class Measuring_Differences:
         avg_difference = np.mean(t_49['count'])
         std_dev_difference = np.std(t_49['count'])
         total_vuln_t = np.sum(t_49['count'])
+        total_count = sum(t_49['count'])
+
 
         print("On average, the count of vulnerabilities reported by t_49 was {:.2f} ".format(avg_difference))
         print("Standard deviation of ", std_dev_difference, "\n")
@@ -457,15 +461,64 @@ class Measuring_Differences:
 
         plt.show()
 
+    def histogram_Grype_minus_Trivy(self):
+        b_73 = distribution(self.G_73).reset_index()
+        t_49 = distribution(self.T_49).reset_index()
+        t_max = max(t_49['count'])
+        g_max = max(b_73['count'])
+
+        # sanity check, we should have the same number of images for both tools.
+        for i in range(0, len(b_73['image_name'])):
+            if b_73.loc[i]['image_name'] != t_49.loc[i]['image_name']:
+                print(b_73.loc[i]['image_name'], t_49.loc[i]['image_name'])
+
+            # Calculate the differences
+        data = {
+            'Image_Name': b_73['image_name'],
+            'Difference': b_73['count'] - t_49['count']
+        }
+
+        df_diff = pd.DataFrame(data)
+
+        # Plotting the density plot
+        plt.figure(figsize=(12, 14))
+
+        # Compute the KDE
+        kde = sns.kdeplot(df_diff['Difference'], fill=False, color="grey")
+
+        # Get the values for the KDE line
+        x_values = kde.lines[0].get_xdata()
+        y_values = kde.lines[0].get_ydata()
+
+        # Fill the area under the curve
+        plt.fill_between(x_values, y_values, where=(x_values < 10), color=(0.6, 0.8, 0.5), alpha=0.9, zorder =1)
+        plt.fill_between(x_values, y_values, where=(x_values > -10), color=(0.5, 0.7, 0.95), alpha=0.9, zorder = 2)
+
+       # plt.title('Density Plot of Grype - Trivy Counts')
+        plt.xlabel('Grype - Trivy Counts', fontsize = '30')
+        plt.ylabel('Density', fontsize = '30')
+        plt.xticks(fontsize=24)
+        plt.yticks(fontsize=24)
+
+        # Set light gray background
+        ax = plt.gca()
+        ax.set_facecolor('#E0E0E0')
+
+
+        # Add horizontal lines for y ticks
+        plt.gca().yaxis.grid(True)
+        plt.gca().xaxis.grid(False)
+        plt.gca().set_axisbelow(True)
+        plt.show()
 
 def main():
     # a bunch of functions showing differences between tools.
     dd = Measuring_Differences()
+    #dd.histogram_Grype_minus_Trivy()
+    #dd.label_counts()
 
-    dd.label_counts()
-
-    #dd.severity_difference()
-    dd.Average_Agreeance()
+    dd.severity_difference()
+    #dd.Average_Agreeance()
     #dd.get_data_difference()
     #dd.side_by_side_violin_plots()
 
