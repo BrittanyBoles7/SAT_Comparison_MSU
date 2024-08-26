@@ -222,7 +222,7 @@ class Measuring_Differences:
         average_num_agreed = []
         average_num_trivy = []
         average_num_grype = []
-        count_oh_shit = 0
+        count = 0
         for i in t_49['image_name']:
 
             filtered_G_73 = self.G_73[self.G_73['image_name'] == i]
@@ -238,7 +238,7 @@ class Measuring_Differences:
 
             common_vuln_ids = vuln_ids_G_73.intersection(vuln_ids_T_49)
             if len(common_vuln_ids) == len(vuln_ids_T_49) and len(common_vuln_ids) == len(vuln_ids_G_73):
-                count_oh_shit = count_oh_shit + 1
+                count = count + 1
             count_common_vuln_ids = len(common_vuln_ids)
             average_num_agreed.append(count_common_vuln_ids)
             average_num_grype.append((len(vuln_ids_G_73)))
@@ -249,7 +249,7 @@ class Measuring_Differences:
         print("average agreed: ", np.average(agreed), "std: ", agreed.std())
         print("average grype: ", np.average(gr), "std: ", gr.std())
         print("average trivy: ", np.average(tr), "std: ", tr.std())
-        print(count_oh_shit)
+        print(count)
 
     def get_data_difference(self):
         # gets the total vulnerabilities in each image.

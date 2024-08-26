@@ -37,11 +37,6 @@ class GrypeImageProcessing:
                 # go through each docker image
                 for image in self.images:
 
-                    # for z in range(0, 50):
-                     #i = self.images[z]
-                    # image comes out as a byte, and we need string form
-                    #image = i.decode('utf-8')
-
                     par_path = str(Path(sys.path[0]).absolute().parent) + '/04_product/Grype/CPE_' + g
 
                     # if the directory doesn't exist yet create it

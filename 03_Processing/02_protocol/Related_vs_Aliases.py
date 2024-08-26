@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 from pathlib import Path
 
-
+# this just validates the related vulns are universal when reported by Grype, checking based on the osv database
 def compare_relation_tables():  # df_t = pd.DataFrame(columns=['image_name', 'vuln_id', 'severity', 'count'])
     grype_info = pd.read_csv(
         str(Path(sys.path[0]).absolute().parent) + "/03_incremental/connectedVulnerabilityIDs.csv")

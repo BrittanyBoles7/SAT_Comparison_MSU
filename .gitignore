@@ -1,42 +1,8 @@
 
-/01_ToolVersions/01_input/GrypeVersions.txt
-/01_ToolVersions/01_input/TrivyVersions.txt
-/01_ToolVersions/04_product/Grype/
-/01_ToolVersions/04_product/Trivy/
-/02_DataAcquisition/04_product/Grype/
-/02_DataAcquisition/04_product/Trivy/
-/02_DataAcquisition/01_input/Grype/
 /02_DataAcquisition/01_input/Trivy/
-/03_Processing/04_product/Grype/
-/03_Processing/04_product/Trivy/
-/03_Processing/01_input/Grype/
+/02_DataAcquisition/01_input/Grype/
 /03_Processing/01_input/Trivy/
-/03_Processing/03_incremental/connectedVulnerabilityIDs.csv
-/01_ToolVersions/03_incremental/images.txt
-/00_DockerImages/01_input/research_images.txt
-/01_ToolVersions/03_incremental/db.tar.gz
-/04_DataAnalysis/01_input/Grype/
-/04_DataAnalysis/01_input/Grype_v_d - Sheet1.csv
-/04_DataAnalysis/01_input/Trivy_v_d - Sheet1.csv
-/00_DockerImages/04_product/docker-images.json.json
-/00_DockerImages/04_product/docker-projects-163-benchmark.json
-/04_DataAnalysis/04_product/ViolinPlots_Grype_Trivy.png
-/04_DataAnalysis/04_product/Figure_1.png
-/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
-/04_DataAnalysis/02_analysis/Grype_related.csv
-/home/brittanyboles/msusel-SATComparison-Pipe/00_DockerImages/04_product/docker-projects-163-benchmark_edited.json
-/04_DataAnalysis/04_product/
-/00_DockerImages/04_product/docker-images.json
-/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
-/04_DataAnalysis/02_analysis/Grype_73_related.csv
-/04_DataAnalysis/02_analysis/Grype_69_related.csv
-/01_ToolVersions/03_incremental/db_dd.tar.gz
 /04_DataAnalysis/01_input/Grype/
 /04_DataAnalysis/01_input/Trivy/
-/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_relatedtest.csv
-/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_73_related.csv
-/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
-/02_DataAcquisition/01_input/Grype/
-/02_DataAcquisition/01_input/Trivy/
-/03_Processing/01_input/Trivy/
-00_DockerImages/04_product/docker-images.json
+/01_ToolVersions/04_product/Grype/
+/01_ToolVersions/04_product/Trivy/
