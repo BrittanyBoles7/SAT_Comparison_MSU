@@ -40,11 +40,10 @@ ___
 ## Tools
 Grype and Trivy 
 ___
-
-## Build Environment
-
-___
 ## Building
+Note you will need to download and configure the tools to use these static databases to replicate excact results. You can also replicate with more current versions of each tools database, or modify program so the tools automatically update their vulnerability databases, which is the standard configuration. Grype and Trivy databases can be found: https://drive.google.com/drive/folders/1AVvaWh7VHWPG5SG9Ni8cv6hsFT3DgqYh?usp=drive_link 
 
+Trivy put the database in 01_ToolVersions/03_incremental 
+Grype go into the config file in 01_ToolVersions/03_incremental and update cache-dir to where you local store Grype db. 
 
 ## Notes
