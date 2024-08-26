@@ -10,7 +10,7 @@ when they both run over the same corpus of Docker images. Below is the flow diag
 of the data pipeline and a brief summary of what each part does. 
 
 
-![Reseach_Flow](Copy_msusel_SAT_Comparison/Research_flow_charts.drawio (1).png)
+![](Copy_msusel_SAT_Comparison/Research_flow_charts.drawio (1).png)
 
 00_DockerImages:
 Here we collect a list of Docker Official images to run our tools over. 
