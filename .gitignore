@@ -31,3 +31,12 @@
 /04_DataAnalysis/02_analysis/Grype_73_related.csv
 /04_DataAnalysis/02_analysis/Grype_69_related.csv
 /01_ToolVersions/03_incremental/db_dd.tar.gz
+/04_DataAnalysis/01_input/Grype/
+/04_DataAnalysis/01_input/Trivy/
+/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_relatedtest.csv
+/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_73_related.csv
+/home/brittanyboles/msusel-SATComparison-Pipe/04_DataAnalysis/02_analysis/Grype_CPE_related.csv
+/02_DataAcquisition/01_input/Grype/
+/02_DataAcquisition/01_input/Trivy/
+/03_Processing/01_input/Trivy/
+00_DockerImages/04_product/docker-images.json
