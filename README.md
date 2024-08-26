@@ -9,7 +9,7 @@ over Docker images. The idea is to be able to compare each tools results to one 
 when they both run over the same corpus of Docker images. Below is the flow diagram 
 of the data pipeline and a brief summary of what each part does. 
 
-![Description of the image](Copy_msusel_SAT_Comparison/Research_flow_charts.drawio.png)
+![Description of the image](Research_flow_charts.drawio.png)
 
 00_DockerImages:
 Here we collect a list of Docker Official images to run our tools over. 
